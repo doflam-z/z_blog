@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>zany blog</title>
+	<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+	<link href="../css/blog.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="stackedit">
+	<div class="mainnav">
+	<ul class="top-level-menu">
+    <li><a href="../index.html">首页</a></li>
+    <li>
+        <a href="#">文章分类</a>
+        <ul class="second-level-menu">
+            <li><a href="#">网络</a></li>
+            <li><a href="#">php</a></li>
+            <li>
+                <a href="#">linux</a>
+                <ul class="third-level-menu">
+                    <li><a href="#">nginx</a></li>
+                    <li><a href="#">frp</a></li>
+                    <li><a href="#">vps</a></li>
+                </ul>
+            </li>
+            	<li><a href="#">other</a></li>
+        </ul>
+    	</li>
+	</ul>
+	<div class="search">  
+        <form>  
+            <input type="text" placeholder="">  
+            <button type="submit">搜索</button>  
+        </form>  
+    </div> 
+	</div>
+<div class="box">
+<div class="archives">
+<h2>Centos7下smartctl安装配置</h2>
+<p>安装</p>
+<pre><code>yum install smartmontools
+</code></pre>
+<p>使用</p>
+<pre><code>1、smartctl -i &lt;device&gt; ：显示设备的身份信息，检查硬盘是否打开了SMART支持。
+看到有：
+    SMART support is: Enabled 
+说明硬盘支持SMART。
+如果为Disabled，使用：
+smartctl --smart=on --offlineauto=on --saveauto=on &lt;device&gt;
+启用SMART。
+2、smartctl -H &lt;device&gt; ：查看硬盘的健康状况。(df -h 查看硬盘 如：/dev/sda )
+
+    === START OF READ SMART DATA SECTION ===
+
+    SMART overall-health self-assessment test result: PASSED 
+
+PASSED表示硬盘健康状态良好，如果为Failure那就要立刻更换硬盘。
+3、smartctl -A &lt;device&gt; ：显示设备SMART厂商属性和值。
+4、smartctl -l error &lt;device&gt; ：显示硬盘历史错误信息。
+5、smartctl --test=TEST &lt;device&gt; ：硬盘自测。
+
+TEST可取值：offline, short, long, conveyance, select,M-N, pending,N, afterselect,[on|off], scttempint,N[,p]
+
+此时可以用smartctl -X中断后台测试。
+6、smartctl -l selftest &lt;device&gt; ：显示硬盘测试信息。
+7、smartctl -a &lt;device&gt; ：显示硬盘SMART的全部信息
+8、smartctl --all /dev/sda 显示硬盘SMART的全部信息
+</code></pre>
+</div>
+</div>
+</body>
+
+</html>

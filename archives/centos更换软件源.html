@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>zany blog</title>
+	<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+	<link href="../css/blog.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="stackedit">
+	<div class="mainnav">
+	<ul class="top-level-menu">
+    <li><a href="../index.html">首页</a></li>
+    <li>
+        <a href="#">文章分类</a>
+        <ul class="second-level-menu">
+            <li><a href="#">网络</a></li>
+            <li><a href="#">php</a></li>
+            <li>
+                <a href="#">linux</a>
+                <ul class="third-level-menu">
+                    <li><a href="#">nginx</a></li>
+                    <li><a href="#">frp</a></li>
+                    <li><a href="#">vps</a></li>
+                </ul>
+            </li>
+            	<li><a href="#">other</a></li>
+        </ul>
+    	</li>
+	</ul>
+	<div class="search">  
+        <form>  
+            <input type="text" placeholder="">  
+            <button type="submit">搜索</button>  
+        </form>  
+    </div> 
+	</div>
+<div class="box">
+<div class="archives">
+<h2>Centos7更换yum源</h2>
+<p><strong>阿里yum源地址</strong><br>
+CentOS 6：wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-6.repo</p>
+<p>CentOS 7：wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo</p>
+<p>yum源目录：/etc/yum.repos.d/CentOS-Base.repo</p>
+<p>备份源软件源：<pre><code>mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup</code></pre></p>
+<p>下载阿里源：<pre><code>wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo</code></pre></p>
+<p>运行yum makecache生成缓存：<pre><code>yum clean all&amp;&amp;yum makecache</code></pre></p>
+<p>查询yum源<br>
+<pre><code>yum repolist</code></pre></p>
+<p><strong>更换阿里yum源脚本：</strong><br>
+<pre><code>
+#!/bin/bash<br>
+mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup<br>
+wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo<br>
+yum clean all&amp;&amp;yum makecache</p>
+</code></pre>
+</div>
+</div>
+</body>
+
+</html>

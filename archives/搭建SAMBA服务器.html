@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>zany blog</title>
+  <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+  <link href="../css/blog.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="stackedit">
+  <div class="mainnav">
+  <ul class="top-level-menu">
+    <li><a href="../index.html">首页</a></li>
+    <li>
+        <a href="#">文章分类</a>
+        <ul class="second-level-menu">
+            <li><a href="#">网络</a></li>
+            <li><a href="#">php</a></li>
+            <li>
+                <a href="#">linux</a>
+                <ul class="third-level-menu">
+                    <li><a href="#">nginx</a></li>
+                    <li><a href="#">frp</a></li>
+                    <li><a href="#">vps</a></li>
+                </ul>
+            </li>
+              <li><a href="#">other</a></li>
+        </ul>
+      </li>
+  </ul>
+  <div class="search">  
+        <form>  
+            <input type="text" placeholder="">  
+            <button type="submit">搜索</button>  
+        </form>  
+    </div> 
+  </div>
+<div class="box">
+<div class="archives">
+<h2>Centos7搭建SAMBA服务器</h2>
+<p>安装：<code>yum -y install samba</code><br>
+创建文件夹和用户<br>
+创建文件夹：<code># mkdir smbuser 创建用户：</code># useradd -s /sbin/nologin smbuser<br>
+创建samba用户：</p>
+<pre><code>smbpasswd -a smbuser
+New SMB password:
+Retype new SMB password:
+Added user logadmin.
+</code></pre>
+<p>更改目录属性：</p>
+<pre><code>#chown smbuser.smbuser smbuser   
+#chmod -R 777 smbuser
+</code></pre>
+<p>配置samba服务：</p>
+<pre><code>vi /etc/samba/smb.conf
+[shared]
+    # 共享文件目录描述
+    comment = Shared Directories
+    # 共享文件目录
+    path = /storage/shared/
+    # 是否允许guest访问
+    public = no
+    # 指定管理用户
+    admin users = admin
+    # 可访问的用户组、用户
+    valid users = @admin
+    # 是否浏览权限
+    browseable = yes
+    # 是否可写权限
+    writable = yes
+    # 文件权限设置
+    create mask = 0777
+    directory mask = 0777
+    force directory mode = 0777
+    force create mode = 0777
+</code></pre>
+<p>保存退出，重启samba。</p>
+</div>
+</div>
+</body>
+
+</html>

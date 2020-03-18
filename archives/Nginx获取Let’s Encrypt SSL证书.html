@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>zany blog</title>
+	<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+	<link href="../css/blog.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="stackedit">
+	<div class="mainnav">
+	<ul class="top-level-menu">
+    <li><a href="../index.html">首页</a></li>
+    <li>
+        <a href="#">文章分类</a>
+        <ul class="second-level-menu">
+            <li><a href="#">网络</a></li>
+            <li><a href="#">php</a></li>
+            <li>
+                <a href="#">linux</a>
+                <ul class="third-level-menu">
+                    <li><a href="#">nginx</a></li>
+                    <li><a href="#">frp</a></li>
+                    <li><a href="#">vps</a></li>
+                </ul>
+            </li>
+            	<li><a href="#">other</a></li>
+        </ul>
+    	</li>
+	</ul>
+	<div class="search">  
+        <form>  
+            <input type="text" placeholder="">  
+            <button type="submit">搜索</button>  
+        </form>  
+    </div> 
+	</div>
+<div class="box">
+<div class="archives">
+	<h2>Nginx获取Let’s Encrypt SSL证书</h2>
+	<p>首先需要注册域名，然后把域名解析到你服务器的ip地址上。<br>
+	<strong>1、下载Let’ s Encrypt客户端</strong><br>
+	Let’ s Encrypt客户端地址：<code>https://github.com/certbot/certbot/releases</code></p>
+	<pre><code>#下载Let’ s Encrypt客户端
+	curl -o certbot-0.39.0.tar.gz https://codeload.github.com/certbot/certbot/tar.gz/v0.39.0
+	#解压、进入目录
+	tar -zxvf certbot-0.39.0.tar.gz
+	cd certbot-0.39.0
+	#检查升级
+	./certbot-auto --help
+	</code></pre>
+	<p>此时会显示帮助文档。<br>
+	<strong>2、获取证书：</strong><br>
+	方法一：停止nginx让出80端口，验证域名。</p>
+	<pre><code>#停止nginx、查看运行状态
+	systemctl stop nginx 
+	systemctl status nginx
+	#运行获取证书命令
+	./certbot-auto certonly --standalone --email xxxx@xx.com -d www.xxxx.com
+	</code></pre>
+	<p>方法二：通过临时目录验证获取（不需要停止nginx让出80端口）</p>
+	<pre><code>./certbot-auto certonly --webroot --email xxxx@xx.com -w /usr/share/nginx/html -d xxx.xxxx.com
+	</code></pre>
+	<p>执行成功则显示如下页面<br>
+	<img src="https://img-blog.csdnimg.cn/2019110111115626.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzMzA4MTQw,size_16,color_FFFFFF,t_70" alt="成功获取证书并保存在“/etc/letsencrypt/live/根域名/” 目录下"></p>
+	<p>获取证书成功后会保存在“/etc/letsencrypt/live/你申请的域名/” 目录下</p>
+	<p>域名自动续期脚本<br>
+	新建<code>/root/certbot-0.39.0/certbotrenew.sh</code>文件写入以下内容</p>
+	<pre><code>[root~]# vi  /root/certbot-0.39.0/certbotrenew.sh
+
+	#!/bin/sh
+	#停止 nginx 服务,使用 --standalone 独立服务器验证需要停止当前 web server.
+	systemctl stop nginx
+	if ! /path/to/certbot-auto renew -nvv --standalone &gt; /var/log/letsencrypt/renew.log 2&gt;&amp;1 ; then
+    	echo Automated renewal failed:
+    	cat /var/log/letsencrypt/renew.log
+   		exit 1
+	fi
+	#启动 nginx
+	systemctl start nginx
+	</code></pre>
+	<p>自动运行脚本</p>
+	<pre><code>[root~]# chmod +x /root/certbot-0.39.0/certbotrenew.sh
+	[root~]# crontab -e	//写入以下内容
+
+	0 23 28 * * /bin/sh /root/certbot-0.39.0/certbotrenew.sh
+	</code></pre>
+</div>
+</div>
+</body>
+
+</html>

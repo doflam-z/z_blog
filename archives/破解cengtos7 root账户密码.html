@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>zany blog</title>
+	<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+	<link href="../css/blog.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="stackedit">
+	<div class="mainnav">
+	<ul class="top-level-menu">
+    <li><a href="../index.html">首页</a></li>
+    <li>
+        <a href="#">文章分类</a>
+        <ul class="second-level-menu">
+            <li><a href="#">网络</a></li>
+            <li><a href="#">php</a></li>
+            <li>
+                <a href="#">linux</a>
+                <ul class="third-level-menu">
+                    <li><a href="#">nginx</a></li>
+                    <li><a href="#">frp</a></li>
+                    <li><a href="#">vps</a></li>
+                </ul>
+            </li>
+            	<li><a href="#">other</a></li>
+        </ul>
+    	</li>
+	</ul>
+	<div class="search">  
+        <form>  
+            <input type="text" placeholder="">  
+            <button type="submit">搜索</button>  
+        </form>  
+    </div> 
+	</div>
+<div class="box">
+<div class="archives">
+<h2>破解cengtos7 root账户密码</h2>
+<p>1.编辑GRUB2。<br>
+正常开启系统，内核选择界面即GRUB2引导界面，按e键，光标上下移动，找到以linux16开头的这一行，按下键盘上的End键，直接跳至这一行的末尾，再按下空格键，输入：\rd.break，别忘了这里的反斜杠，完成后按下Ctrl+X进入命令行界面，此时屏幕显示：switch_root:/#。</p>
+<p>2.重新挂载原系统文件，并chroot到原系统根目录下。<br>
+<pre><code>switch_root:/# mount -o remount,rw /sysroot</code></pre>
+<pre><code>switch_root:/# chroot /sysroot</code></pre>
+3.修改密码。<br>
+<pre><code>sh-4.2# passwd root</code></pre>
+<pre><code>sh-4.2# touch /.autorelabel</code></pre>
+4.Ctrl+D退出，reboot系统，使用新密码登录即可。</p>
+</div>
+</div>
+</body>
+
+</html>

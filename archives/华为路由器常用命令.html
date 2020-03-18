@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>zany blog</title>
+	<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+	<link href="../css/blog.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="stackedit">
+	<div class="mainnav">
+	<ul class="top-level-menu">
+    <li><a href="../index.html">首页</a></li>
+    <li>
+        <a href="#">文章分类</a>
+        <ul class="second-level-menu">
+            <li><a href="#">网络</a></li>
+            <li><a href="#">php</a></li>
+            <li>
+                <a href="#">linux</a>
+                <ul class="third-level-menu">
+                    <li><a href="#">nginx</a></li>
+                    <li><a href="#">frp</a></li>
+                    <li><a href="#">vps</a></li>
+                </ul>
+            </li>
+            	<li><a href="#">other</a></li>
+        </ul>
+    	</li>
+	</ul>
+	<div class="search">  
+        <form>  
+            <input type="text" placeholder="">  
+            <button type="submit">搜索</button>  
+        </form>  
+    </div> 
+	</div>
+<div class="box">
+<div class="archives">
+<h2>华为路由器常用命令</h2>
+<pre><code>Liufei]display version 　　　　　　；显示版本信息
+[Liufei]display current-configuration 　　　　　　；显示当前配置
+[Liufei]display interfaces 　　　　　　；显示接口信息
+[Liufei]display ip route 　　　　　　；显示路由信息
+[Liufei]sysname lf123 　　　　　　；更改主机名
+[Liufei]super passwrod 123456 　　　　　　；设置口令
+[Liufei]interface serial0 　　　　　　；进入接口
+[Liufei-serial0]ip address ；配置端口IP地址
+[Liufei-serial0]undo shutdown 　　　　　　；激活端口
+[Liufei]link-protocol hdlc 　　　　　　；绑定hdlc协议
+[Liufei]user-interface vty 0 4
+[Liufei-ui-vty0-4]authentication-mode password
+[Liufei-ui-vty0-4]set authentication-mode password simple 222
+[Liufei-ui-vty0-4]user privilege level 3
+[Liufei-ui-vty0-4]quit
+[Liufei]debugging hdlc all serial0 　　　　　　；显示所有信息
+[Liufei]debugging hdlc event serial0 　　　　　　；调试事件信息
+[Liufei]debugging hdlc packet serial0 　　　　　　；显示包的信息
+静态路由：
+[Liufei]ip route-static {interface number|nexthop}[value][reject|blackhole]
+例如：
+[Liufei]ip route-static 129.1.0.0 16 10.0.0.2
+[Liufei]ip route-static 129.1.0.0 255.255.0.0 10.0.0.2
+[Liufei]ip route-static 129.1.0.0 16 Serial 2
+[Liufei]ip route-static 0.0.0.0 0.0.0.0 10.0.0.2
+动态路由：
+[Liufei]rip ；设置动态路由
+[Liufei]rip work ；设置工作允许
+[Liufei]rip input ；设置入口允许
+[Liufei]rip output ；设置出口允许
+[Liufei-rip]network 1.0.0.0 　　　　　 ；设置交换路由网络
+[Liufei-rip]network all ；设置与所有网络交换
+[Liufei-rip]peer ip-address ；
+[Liufei-rip]summary ；路由聚合
+[Liufei]rip version 1 ；设置工作在版本1
+[Liufei]rip version 2 multicast ；设版本2，多播方式
+[Liufei-Ethernet0]rip split-horizon ；水平分隔
+[Liufei]router id A.B.C.D ；配置路由器的ID
+[Liufei]ospf enable ；启动OSPF协议
+[Liufei-ospf]import-route direct ；引入直联路由
+[Liufei-Serial0]ospf enable area ；配置OSPF区域
+标准访问列表命令格式如下：
+acl [match-order config|auto] ；默认前者顺序匹配。
+rule [normal|special]{permit|deny} [source source-addr source-wildcard|any]
+例：
+[Liufei]acl 10
+[Liufei-acl-10]rule normal permit source 10.0.0.0 0.0.0.255
+[Liufei-acl-10]rule normal deny source any
+扩展访问控制列表配置命令
+配置TCP/UDP协议的扩展访问列表：
+rule {normal|special}{permit|deny}{tcp|udp}source {|any}destination |any}
+[operate]
+配置ICMP协议的扩展访问列表：
+rule {normal|special}{permit|deny}icmp source {|any]destination {|any]
+[icmp-code] [logging]
+扩展访问控制列表操作符的含义
+equal portnumber ；等于
+greater-than portnumber ；大于
+less-than portnumber ；小于
+not-equal portnumber ；不等
+range portnumber1 portnumber2 ；区间
+扩展访问控制列表举例
+[Liufei]acl 101
+[Liufei-acl-101]rule deny souce any destination any
+[Liufei-acl-101]rule permit icmp source any destination any icmp-type echo
+[Liufei-acl-101]rule permit icmp source any destination any icmp-type echo-reply
+[Liufei]acl 102
+[Liufei-acl-102]rule permit ip source 10.0.0.1 0.0.0.0 destination 202.0.0.1 0.0.0.0
+[Liufei-acl-102]rule deny ip source any destination any
+[Liufei]acl 103
+[Liufei-acl-103]rule permit tcp source any destination 10.0.0.1 0.0.0.0 destination-port equal ftp
+[Liufei-acl-103]rule permit tcp source any destination 10.0.0.2 0.0.0.0 destination-port equal www
+[Liufei]firewall enable
+[Liufei]firewall default permit|deny
+[Liufei]int e0
+[Liufei-Ethernet0]firewall packet-filter 101 inbound|outbound
+地址转换配置举例
+[Liufei]firewall enable
+[Liufei]firewall default permit
+[Liufei]acl 101 ;内部指定主机可以进入e0
+[Liufei-acl-101]rule deny ip source any destination any
+[Liufei-acl-101]rule permit ip source 129.38.1.1 0 destination any
+[Liufei-acl-101]rule permit ip source 129.38.1.2 0 destination any
+[Liufei-acl-101]rule permit ip source 129.38.1.3 0 destination any
+[Liufei-acl-101]rule permit ip source 129.38.1.4 0 destination any
+[Liufei-acl-101]quit
+[Liufei]int e0
+[Liufei-Ethernet0]firewall packet-filter 101 inbound
+[Liufei]acl 102 ;外部特定主机和大于1024端口的数据包允许进入S0
+[Liufei-acl-102]rule deny ip source any destination any
+[Liufei-acl-102]rule permit tcp source 202.39.2.3 0 destination 202.38.160.1 0
+[Liufei-acl-102]rule permit tcp source any destination 202.38.160.1 0 destination-port great-than
+1024
+[Liufei-acl-102]quit
+[Liufei]int s0
+[Liufei-Serial0]firewall packet-filter 102 inbound ；设202.38.160.1是路由器出口IP。
+[Liufei-Serial0]nat outbound 101 interface ;是Easy ip，将acl 101允许的IP从本接口出时变换源地址。
+内部服务器地址转换配置命令(静态nat)：
+nat server global [port] inside port [protocol] ;global_port不写时使用inside_port
+[Liufei-Serial0]nat server global 202.38.160.1 inside 129.38.1.1 ftp tcp
+[Liufei-Serial0]nat server global 202.38.160.1 inside 129.38.1.2 telnet tcp
+[Liufei-Serial0]nat server global 202.38.160.1 inside 129.38.1.3 www tcp
+设有公网IP：202.38.160.101~202.38.160.103 可以使用。 ;对外访问(原例题)
+[Liufei]nat address-group 202.38.160.101 202.38.160.103 pool1 ;建立地址池
+[Liufei]acl 1
+[Liufei-acl-1]rule permit source 10.110.10.0 0.0.0.255 ;指定允许的内部网络
+[Liufei-acl-1]rule deny source any
+[Liufei-acl-1]int serial 0
+[Liufei-Serial0]nat outbound 1 address-group pool1 ;在s0口从地址池取出IP对外访问
+[Liufei-Serial0]nat server global 202.38.160.101 inside 10.110.10.1 ftp tcp
+[Liufei-Serial0]nat server global 202.38.160.102 inside 10.110.10.2 www tcp
+[Liufei-Serial0]nat server global 202.38.160.102 8080 inside 10.110.10.3 www tcp
+[Liufei-Serial0]nat server global 202.38.160.103 inside 10.110.10.4 smtp udp
+PPP设置：
+[Liufei-s0]link-protocol ppp ;默认的协议
+PPP验证：
+主验方：pap|chap
+[Liufei]local-user q2 password {simple|cipher} hello ;路由器1
+[Liufei]interface serial 0
+[Liufei-serial0]ppp authentication-mode {pap|chap}
+[Liufei-serial0]ppp chap user q1 ;pap时，没有此句
+pap被验方：
+[Liufei]interface serial 0 ;路由器2
+[Liufei-serial0]ppp pap local-user q2 password {simple|cipher} hello
+chap被验方：
+[Liufei]interface serial 0 ;路由器2
+[Liufei-serial0]ppp chap user q2 ;自己路由器名
+[Liufei-serial0]local-user q1 password {simple|cipher} hello ;对方路由器名
+帧中继frame-relay (二分册6-61)
+[q1]fr switching
+[q1]int s1
+[q1-Serial1]ip address 192.168.34.51 255.255.255.0
+[q1-Serial1]link-protocol fr ;封装帧中继协议
+[q1-Serial1]fr interface-type dce
+[q1-Serial1]fr dlci 100
+[q1-Serial1]fr inarp
+[q1-Serial1]fr map ip 192.168.34.52 dlci 100
+[q2]int s1
+[q2-Serial1]ip address 192.168.34.52 255.255.255.0
+[q2-Serial1]link-protocol fr
+[q2-Serial1]fr interface-type dte
+[q2-Serial1]fr dlci 100
+[q2-Serial1]fr inarp
+[q2-Serial1]fr map ip 192.168.34.51 dlci 100
+帧中继监测
+[q1]display fr lmi-info[]interface type number]
+[q1]display fr map
+[q1]display fr pvc-info[serial interface-number][dlci dlci-number]
+[q1]display fr dlci-switch
+[q1]display fr interface
+[q1]reset fr inarp-info
+[q1]debugging fr all[interface type number]
+[q1]debugging fr arp[interface type number]
+[q1]debugging fr event[interface type number]
+[q1]debugging fr lmi[interface type number]
+启动ftp服务：
+[Liufei]local-user ftp password {simple|cipher} aaa service-type ftp
+[Liufei]ftp server enable
+</code></pre>
+</div>
+</div>
+</body>
+
+</html>
