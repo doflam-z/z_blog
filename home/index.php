@@ -4,12 +4,12 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title>zany blog</title>
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-	<link href="css/blog.css" rel="stylesheet" type="text/css" />
+	<link href="public/css/blog.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 	<div class="mainnav">
 	<ul class="top-level-menu">
-    <li><a href="index.html">首页</a></li>
+    <li><a href="/">首页</a></li>
     <li>
         <a href="#">文章分类</a>
         <ul class="second-level-menu">
@@ -38,12 +38,12 @@
 		<div class="box_head">
 			<div class="box_head_title">
 				<h1 class="font01"><a href="index.html">ZANY</a></h1>
-				<span>曾经纯真的画面，残忍的温柔出现，脆弱时间到，我们一起来祷告</span>
+				<span>没有喧嚣 只有宁静围绕 我 慢慢睡着 天 刚刚破晓</span>
 			</div>
 		</div>
 		<div class="box_main">
 			<div class="box_content">
-				<h3 class="font01"><a href="./archives/Nginx获取Let’s Encrypt SSL证书.html">获取Let’s Encrypt SSL证书</a></h3><br>
+				<h3 class="font01"><a href="/2">获取Let’s Encrypt SSL证书</a></h3><br>
 				<p>Let’s Encrypt 是免费、开放和自动化的证书颁发机构</p>
 				<h5>>><a href="./archives/Nginx获取Let’s Encrypt SSL证书.html">阅读全文</a></h5>
 			</div>
@@ -83,3 +83,4 @@
 	</div>
 </body>
 </html>
+
