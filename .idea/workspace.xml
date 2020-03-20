@@ -2,9 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6f25fc7d-9351-413e-b8a1-5545ee00ac25" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/home/index.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/home/login.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/code.php" beforeDir="false" afterPath="$PROJECT_DIR$/models/code.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/css/blog.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/blog.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,6 +23,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP" />
   <component name="ProjectId" id="1Y37a1NiCoq0D6itNzHWGCooUG1" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -29,7 +34,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="D:/phpstudy_pro/Extensions/php/php7.3.4nts/php.exe" />
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -44,6 +49,7 @@
       <workItem from="1582159485558" duration="288000" />
       <workItem from="1582168431360" duration="11000" />
       <workItem from="1584514735903" duration="1333000" />
+      <workItem from="1584664790403" duration="30890000" />
     </task>
     <servers />
   </component>
@@ -51,6 +57,30 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="2460" y="175" key="#CLI_Interpreters" timestamp="1584665021332">
+      <screen x="1920" y="0" width="1920" height="1040" />
+    </state>
+    <state x="2460" y="175" key="#CLI_Interpreters/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1584665021332" />
+    <state x="2472" y="178" key="#Notifications" timestamp="1584664947058">
+      <screen x="1920" y="0" width="1920" height="1040" />
+    </state>
+    <state x="2472" y="178" key="#Notifications/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1584664947058" />
+    <state x="2562" y="108" key="#PHP" timestamp="1584665024804">
+      <screen x="1920" y="0" width="1920" height="1040" />
+    </state>
+    <state x="2562" y="108" key="#PHP/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1584665024804" />
+    <state x="2480" y="113" key="CommitChangelistDialog2" timestamp="1584719896842">
+      <screen x="1920" y="0" width="1920" height="1040" />
+    </state>
+    <state x="2480" y="113" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1584719896842" />
+    <state x="2660" y="275" key="FileChooserDialogImpl" timestamp="1584665016614">
+      <screen x="1920" y="0" width="1920" height="1040" />
+    </state>
+    <state x="2660" y="275" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1584665016614" />
+    <state x="2696" y="443" key="NewPhpFileDialog" timestamp="1584717702564">
+      <screen x="1920" y="0" width="1920" height="1040" />
+    </state>
+    <state x="2696" y="443" key="NewPhpFileDialog/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1584717702564" />
     <state x="645" y="344" key="com.intellij.ide.util.TipDialog" timestamp="1582168432841">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

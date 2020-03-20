@@ -1,3 +1,9 @@
+<?php
+//session_start();
+if ($_SESSION['isLogin']){}else{
+    header('Location:/login');
+}
+?>
 <!DOCTYPE html>
 <html>
 <head>
