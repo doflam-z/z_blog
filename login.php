@@ -1,22 +1,14 @@
 <?php 
 //后台登录页
+include "models/mysql.php";
+session_start();
 //连接数据库判断是否连接成功
 if(isset($_POST["sub"])){
-    try {
-        $pdo=new PDO("mysql:host=localhost;dbname=z_blog","root","root");
-        $pdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);   //设置PDO显示异常
-    }catch(PDOException $e){
-        echo '数据库连接失败'.$e->getMessage();
-    }
-    session_start();
-
+    $pdo=mysqlCont();
 	$sql="select user_name,user_id from user where user_name='{$_POST["user_name"]}' and user_passwd='".md5($_POST["user_passwd"])."'";
 	//验证账户密码
 	$result=$pdo->query($sql);
     $user_id=$result->fetchAll(PDO::FETCH_ASSOC)['0']['user_id'];
-/*    echo "<pre>";
-    print_r($result->fetchAll(PDO::FETCH_ASSOC)['0']['user_id']);
-    echo "</pre></br>";*/
 
 	if ($result->rowCount() > 0 and $_SESSION['code']==$_POST['code']) {
         $_SESSION['user_name']=$_POST['user_name'];

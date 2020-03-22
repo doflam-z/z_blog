@@ -2,13 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6f25fc7d-9351-413e-b8a1-5545ee00ac25" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/home/index.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/home/login.php" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/code.php" beforeDir="false" afterPath="$PROJECT_DIR$/models/code.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/css/blog.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/blog.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/login.php" beforeDir="false" afterPath="$PROJECT_DIR$/login.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/mysql.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/page.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/search.php" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,12 +24,16 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP" />
   <component name="ProjectId" id="1Y37a1NiCoq0D6itNzHWGCooUG1" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -49,12 +52,39 @@
       <workItem from="1582159485558" duration="288000" />
       <workItem from="1582168431360" duration="11000" />
       <workItem from="1584514735903" duration="1333000" />
-      <workItem from="1584664790403" duration="30890000" />
+      <workItem from="1584664790403" duration="31009000" />
+      <workItem from="1584812967745" duration="2971000" />
+      <workItem from="1584836984788" duration="30328000" />
     </task>
+    <task id="LOCAL-00001" summary="2020-3-20">
+      <created>1584719948637</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1584719948637</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="2020-3-20" />
+    <option name="LAST_COMMIT_MESSAGE" value="2020-3-20" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2460" y="175" key="#CLI_Interpreters" timestamp="1584665021332">
@@ -69,21 +99,31 @@
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>
     <state x="2562" y="108" key="#PHP/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1584665024804" />
-    <state x="2480" y="113" key="CommitChangelistDialog2" timestamp="1584719896842">
+    <state x="2480" y="113" key="CommitChangelistDialog2" timestamp="1584719947985">
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>
-    <state x="2480" y="113" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1584719896842" />
+    <state x="2480" y="113" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1584719947985" />
     <state x="2660" y="275" key="FileChooserDialogImpl" timestamp="1584665016614">
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>
     <state x="2660" y="275" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1584665016614" />
-    <state x="2696" y="443" key="NewPhpFileDialog" timestamp="1584717702564">
-      <screen x="1920" y="0" width="1920" height="1040" />
+    <state x="777" y="443" key="NewPhpFileDialog" timestamp="1584863375112">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="2696" y="443" key="NewPhpFileDialog/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1584717702564" />
+    <state x="777" y="443" key="NewPhpFileDialog/1920.0.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1584863375112" />
+    <state x="2357" y="801" key="NewPhpFileDialog/1920.0.1080.1880/0.0.1920.1040@1920.0.1080.1880" timestamp="1584813343272" />
     <state x="645" y="344" key="com.intellij.ide.util.TipDialog" timestamp="1582168432841">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="645" y="344" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1582168432841" />
+    <state x="616" y="240" key="run.anything.popup" timestamp="1584868806862">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="616" y="240" key="run.anything.popup/1920.0.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1584868806862" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1584886613901">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/1920.0.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1584886613901" />
   </component>
 </project>
