@@ -1,13 +1,17 @@
 <?php
-$str=$_POST["search_str"];
-$_SESSION["a"]=1;
 include "models/cont.init.php";
-include "models/mysql.php";
 include "class/page.class.php";
 include "class/maindisplay.class.php";
-echo "<pre>";
-print_r($_GET);
-echo "</pre>";
+//----------------------------------------------
+$display=new MainDisplay();
+$str=$_GET["search_str"];
+$rows=$display->cateNav();
+$nav1=$rows[0]["cate_name"];
+$nav2=$rows[1]["cate_name"];
+$nav3=$rows[2]["cate_name"];
+$nav4=$rows[3]["cate_name"];
+$nav5=$rows[4]["cate_name"];
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -22,19 +26,19 @@ echo "</pre>";
 	<ul class="top-level-menu">
     <li><a href="/?home">首页</a></li>
     <li>
-        <a href="#">文章分类</a>
+        <a href="#"><?php echo $nav1;?></a>
         <ul class="second-level-menu">
-            <li><a href="/?nav=net">网络</a></li>
-            <li><a href="/?nav=php">php</a></li>
+            <li><a href="/?nav=<?php echo $nav2;?>"><?php echo $nav2;?></a></li>
+            <li><a href="/?nav=<?php echo $nav3;?>"><?php echo $nav3;?></a></li>
             <li>
-                <a href="/?nav=linux">linux</a>
+                <a href="/?nav=<?php echo $nav4;?>"><?php echo $nav4;?></a>
                 <ul class="third-level-menu">
-                    <li><a href="/?nav=th1">nginx</a></li>
+                    <li><a href="/?nav=th1"></a></li>
                     <li><a href="/?nav=th2">frp</a></li>
                     <li><a href="/?nav=th3">vps</a></li>
                 </ul>
             </li>
-            	<li><a href="/?nav=other">other</a></li>
+            	<li><a href="/?nav=<?php echo $nav5;?>"><?php echo $nav5;?></a></li>
         </ul>
     	</li>
 	</ul>
@@ -55,7 +59,6 @@ echo "</pre>";
 		</div>
 		<div class="box_main">
             <?php
-            $display=new MainDisplay();
             if(isset($_GET["search"])){
                 $display-> search();
             }elseif(isset($_GET["nav"])){

@@ -16,17 +16,18 @@ class MainDisplay
     {
     $pdo=$this->mysqlCont();
     $str=$_GET["search_str"];
-    $sql="select bname from t3 where bname like '%$str%'";
+    $sql="select article_title from article where article_title like '%$str%'";
     $result=$pdo->query($sql);
     $rows=$result->fetchAll();
     $total = count($rows);
     $page = new Page($total, $listRows = 6, $query = "", $ord = true);
-    $sql = "select bname from t3 where bname like '%$str%' {$page->limit}";
+    $sql = "select article_title from article where article_title like '%$str%' {$page->limit}";
     $result = $pdo->query($sql);
-    if ($result !== array()) {
+    $result_str=$result->fetch();
+    if ( $result_str) {
     echo '<div class="box_content"><h3 class="font01">包含关键字['.$str.']的搜索结果如下</h3></div></br>';
     foreach ($result as $value) {
-    echo '<div class="box_content"><h3 class="font01">' . $value["bname"] . '</h3></div></br>';
+    echo '<div class="box_content"><h3 class="font01">' . $value["article_title"] . '</h3></div></br>';
     }
     echo $page->fpage();
     }else{
@@ -38,37 +39,45 @@ class MainDisplay
     function fpage()
     {
     $pdo=$this->mysqlCont();
-    $result=$pdo->query("select * from t3");
+    $result=$pdo->query("select * from article");
     $rows=$result->fetchAll();
     $total = count($rows);
     $page = new Page($total, $listRows = 6, $query = "", $ord = true);
-    $sql = "select * from t3 {$page->limit}";
+    $sql = "select * from article {$page->limit}";
     $result = $pdo->query($sql);
 
     foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $value) {
-    echo '<div class="box_content"><h3 class="font01">' . $value["bname"] . '</h3></div></br>';
+    echo '<div class="box_content"><h3 class="font01">' . $value["article_title"] . '</h3></div></br>';
     }
     echo $page->fpage();
     }
 
+    //输出分类导航标签方法
+    function cateNav(){
+        $pdo=$this->mysqlCont();
+        $sql = "select * from category";
+        $result = $pdo->query($sql);
+        $rows=$result->fetchAll();
+        return $rows;
+    }
 
     //显示分类的内容方法
     function category()
     {
         $pdo=$this->mysqlCont();
-        $sql="select * from t3 where btype='chengxu' ";
-        $row=$pdo->query($sql)->fetch();
-        $cate_name=$row["btype"];
-        $rows=$pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-
-        switch ($_GET["nav"]){
-            case "net":
-                echo '<div class="box_content"><h3 class="font01">属于['.$cate_name.']分类的文章如下</h3></div></br>';
-                foreach ($rows as $value) {
-                    echo '<div class="box_content"><h3 class="font01">' . $value["bname"] . '</h3></div></br>';
-                }
-                break;
+        $cate_name=$_GET["nav"];
+        $result=$pdo->query("select * from article where cate_name='".$cate_name."'");
+        $rows=$result->fetchAll(PDO::FETCH_ASSOC);
+        $total=count($rows);
+        $page = new Page($total, $listRows = 6, $query = "", $ord = true);
+        $sql="select * from article where cate_name='".$cate_name."' {$page->limit}";
+        $result=$pdo->query($sql);
+        $rows=$result->fetchAll(PDO::FETCH_ASSOC);
+        echo '<div class="box_content"><h3 class="font01">【' . $cate_name . '】分类的文章如下</h3></div></br>';
+        foreach ($rows as $value) {
+            echo '<div class="box_content"><h3 class="font01">' . $value["article_title"] . '</h3></div></br>';
         }
+        echo $page->fpage();
     }
 
     //连接数据库方法
@@ -82,4 +91,6 @@ class MainDisplay
     }
     return $pdo;
     }
+
+
 }
