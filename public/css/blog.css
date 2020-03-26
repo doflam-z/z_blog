@@ -237,6 +237,10 @@ input,button{
 	margin: 0px;
 	padding: 0px;
 }
+.box_content_list{
+	position: relative;
+	width: 100%;
+}
 .archives{
 	padding-top: 20px;
 	padding-bottom: 60px;

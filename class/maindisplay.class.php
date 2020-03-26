@@ -11,45 +11,58 @@ class MainDisplay
     $this->dbname=$dbname;
     }
 
+    //连接数据库方法
+    function mysqlCont()
+    {
+        try {
+            $pdo = new PDO("mysql:host=localhost;dbname=$this->dbname", "root", "root");
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);   //设置PDO显示异常
+        } catch (PDOException $e) {
+            echo '数据库连接失败' . $e->getMessage();
+        }
+        return $pdo;
+    }
+
     //显示搜索的内容方法
     function search()
     {
-    $pdo=$this->mysqlCont();
-    $str=$_GET["search_str"];
-    $sql="select article_title from article where article_title like '%$str%'";
-    $result=$pdo->query($sql);
-    $rows=$result->fetchAll();
-    $total = count($rows);
-    $page = new Page($total, $listRows = 6, $query = "", $ord = true);
-    $sql = "select article_title from article where article_title like '%$str%' {$page->limit}";
-    $result = $pdo->query($sql);
-    $result_str=$result->fetch();
-    if ( $result_str) {
-    echo '<div class="box_content"><h3 class="font01">包含关键字['.$str.']的搜索结果如下</h3></div></br>';
-    foreach ($result as $value) {
-    echo '<div class="box_content"><h3 class="font01">' . $value["article_title"] . '</h3></div></br>';
-    }
-    echo $page->fpage();
-    }else{
-    echo '<div class="box_content"><h3 class="font01">关键字['.$str.']无搜索结果</h3></div></br>';
-    }
+        $str=$_GET["search_str"];
+        $sql="select article_title from article where article_title like '%$str%'";
+        $pdo=$this->mysqlCont();
+        $rows=$pdo->query($sql)->fetchAll();
+        //-------使用分页类部分
+        $total = count($rows);
+        $page = new Page($total, $listRows = 6, $query = "", $ord = true);
+        $sql = $sql.' '.$page->limit;
+        $result = $pdo->query($sql);
+
+        $result_str=$result->fetch();
+        if ( $result_str) {
+        echo '<div class="box_content"><h3 class="font01">包含关键字['.$str.']的搜索结果如下</h3></div></br>';
+        foreach ($result as $value) {
+        echo '<div class="box_content"><h3 class="font01">' . $value["article_title"] . '</h3></div></br>';
+        }
+        echo '<div class="box_content_list" style="height: 50px">' .$page->fpage(5,6). '</div>';
+        }else{
+        echo '<div class="box_content"><h3 class="font01">关键字['.$str.']无搜索结果</h3></div></br>';
+        }
     }
 
     //显示默认分页的内容方法
     function fpage()
     {
-    $pdo=$this->mysqlCont();
-    $result=$pdo->query("select * from article");
-    $rows=$result->fetchAll();
-    $total = count($rows);
-    $page = new Page($total, $listRows = 6, $query = "", $ord = true);
-    $sql = "select * from article {$page->limit}";
-    $result = $pdo->query($sql);
-
-    foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $value) {
-    echo '<div class="box_content"><h3 class="font01">' . $value["article_title"] . '</h3></div></br>';
-    }
-    echo $page->fpage();
+        $sql="select * from article";
+        $pdo=$this->mysqlCont();
+        $rows=$pdo->query($sql)->fetchAll();
+        //-------使用分页类部分
+        $total = count($rows);
+        $page = new Page($total, $listRows = 6, $query = "", $ord = true);
+        $sql = $sql.' '.$page->limit;
+        $result = $pdo->query($sql);
+        foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $value) {
+            echo '<div class="box_content"><h3 class="font01">' . $value["article_title"] . '</h3></div></br>';
+        }
+        echo '<div class="box_content_list" style="height: 50px">' .$page->fpage(5,6). '</div>';
     }
 
     //输出分类导航标签方法
@@ -64,33 +77,140 @@ class MainDisplay
     //显示分类的内容方法
     function category()
     {
-        $pdo=$this->mysqlCont();
         $cate_name=$_GET["nav"];
-        $result=$pdo->query("select * from article where cate_name='".$cate_name."'");
-        $rows=$result->fetchAll(PDO::FETCH_ASSOC);
-        $total=count($rows);
+        $sql="select * from article where cate_name='".$cate_name."'";
+        $pdo=$this->mysqlCont();
+        $rows=$pdo->query($sql)->fetchAll();
+        //-------使用分页类部分
+        $total = count($rows);
         $page = new Page($total, $listRows = 6, $query = "", $ord = true);
-        $sql="select * from article where cate_name='".$cate_name."' {$page->limit}";
-        $result=$pdo->query($sql);
-        $rows=$result->fetchAll(PDO::FETCH_ASSOC);
+        $sql = $sql.' '.$page->limit;
+        $result = $pdo->query($sql);
+
         echo '<div class="box_content"><h3 class="font01">【' . $cate_name . '】分类的文章如下</h3></div></br>';
-        foreach ($rows as $value) {
+        foreach ($result as $value) {
             echo '<div class="box_content"><h3 class="font01">' . $value["article_title"] . '</h3></div></br>';
         }
-        echo $page->fpage();
+        echo '<div class="box_content_list" style="height: 50px">' .$page->fpage(5,6). '</div>';
     }
 
-    //连接数据库方法
-    function mysqlCont()
+    //显示后台文章管理的方法
+    function article_manage()
     {
-    try {
-    $pdo = new PDO("mysql:host=localhost;dbname=$this->dbname", "root", "root");
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);   //设置PDO显示异常
-    } catch (PDOException $e) {
-    echo '数据库连接失败' . $e->getMessage();
+        $tablename="article";
+        $sql="select * from $tablename";
+        $pdo=$this->mysqlCont();
+        $rows=$pdo->query($sql)->fetchAll();
+        //-------使用分页类部分
+        $total = count($rows);
+        $page = new Page($total, $listRows = 6, $query = "", $ord = true);
+        $sql = $sql.' '.$page->limit;
+        $result = $pdo->query($sql);
+        $main_display=null;
+        $main_display.= "<div class='main-content-nav'><ul class='content-nav'><li style='border-bottom: 2px solid #2f96b4 '><a href='?menu=article'>全部文章</a></li><li><a href='?menu=article_draft'>草稿箱</a></li></ul></div>";
+        foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $value) {
+            $id=$value["id"];
+            $main_display.= "<div class='box_content'><h3 class='font01'> {$value["article_title"]}</h3><div class='manage_button'><a href='?num={$page->pageNum()}&up_id=$id&up_tablename=$tablename' style='color: #149bdf'>修改</a> | <a href='?num={$page->pageNum()}&de_id=$id&de_tablename=$tablename' style='color: #e9322d'>删除</a></div></div></br>";
+        }
+        $main_display.= '<div class="box_content_list" style="height: 50px">' .$page->fpage(5,6). '</div>';
+        return $main_display;
     }
-    return $pdo;
+    //显示后台分类管理的方法
+    function cate_manage()
+    {
+        $tablename="category";
+        $sql="select * from $tablename";
+        $pdo=$this->mysqlCont();
+        $rows=$pdo->query($sql)->fetchAll();
+        //-------使用分页类部分
+        $total = count($rows);
+        $page = new Page($total, $listRows = 6, $query = "", $ord = true);
+        $sql = $sql.' '.$page->limit;
+        $result = $pdo->query($sql);
+        $main_display=null;
+        $main_display.= "<div class='main-content-nav'><ul class='content-nav'><li style='border-bottom: 2px solid #2f96b4 '><a href='?menu=cate'>全部分类</a></li></ul></div>";
+        foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $value) {
+            $id=$value["id"];
+            $main_display.= "<div class='box_content'><h3 class='font01'> {$value["cate_name"]}</h3><div class='manage_button'><a href='?menu=cate&up_id=$id&up_tablename=$tablename&num={$page->pageNum()}' style='color: #149bdf'>修改</a> | <a href='?&menu=cate&de_id=$id&de_tablename=$tablename&num={$page->pageNum()}' style='color: #e9322d'>删除</a></div></div></br>";
+        }
+        $main_display.= '<div class="box_content_list" style="height: 50px">' .$page->fpage(5,6). '</div>';
+        return $main_display;
+    }
+    //显示评论管理的方法
+    function comment_manage()
+    {
+        $tablename="comment";
+        $sql="select * from $tablename";
+        $pdo=$this->mysqlCont();
+        $rows=$pdo->query($sql)->fetchAll();
+        //-------使用分页类部分
+        $total = count($rows);
+        $page = new Page($total, $listRows = 6, $query = "", $ord = true);
+        $sql = $sql.' '.$page->limit;
+        $result = $pdo->query($sql);
+        $main_display=null;
+        $main_display.= "<div class='main-content-nav'><ul class='content-nav'><li style='border-bottom: 2px solid #2f96b4 '><a href='?menu=article'>全部评论</a></li></ul></div>";
+        foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $value) {
+            $id=$value["id"];
+            $main_display.= "<div class='box_content'><h3 class='font01'> {$value["comment_content"]}</h3><div class='manage_button'><a href='?menu=comment&up_id=$id&up_tablename=$tablename&num={$page->pageNum()}' style='color: #149bdf'>修改</a> | <a href='?menu=comment&de_id=$id&de_tablename=$tablename&num={$page->pageNum()}' style='color: #e9322d'>删除</a></div></div></br>";
+        }
+        $main_display.= '<div class="box_content_list" style="height: 50px">' .$page->fpage(5,6). '</div>';
+        return $main_display;
+    }
+    //显示草稿箱的方法
+    function article_draft()
+    {
+        $tablename="t2";
+        $sql="select * from $tablename";
+        $pdo=$this->mysqlCont();
+        $rows=$pdo->query($sql)->fetchAll();
+        //-------使用分页类部分
+        $total = count($rows);
+        $page = new Page($total, $listRows = 6, $query = "", $ord = true);
+        $sql = $sql.' '.$page->limit;
+        $result = $pdo->query($sql);
+        $main_display=null;
+        $main_display.= "<div class='main-content-nav'><ul class='content-nav'><li><a href='?menu=article'>全部文章</a></li><li style='border-bottom: 2px solid #2f96b4'><a href='?menu=article_draft'>草稿箱</a></li></ul></div>";
+        foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $value) {
+            $id=$value["id"];
+            $main_display.= "<div class='box_content'><h3 class='font01'> {$value["sname"]} {$value["id"]}</h3><div class='manage_button'><a href='?menu=article_draft&up_id=$id&up_tablename=$tablename&num={$page->pageNum()}' style='color: #149bdf'>修改</a> | <a href='?menu=article_draft&de_id=$id&de_tablename=$tablename&num={$page->pageNum()}' style='color: #e9322d'>删除</a></div></div></br>";
+        }
+        $main_display.= '<div class="box_content_list" style="height: 50px">' .$page->fpage(5,6). '</div>';
+        return $main_display;
     }
 
+    //新增分类的方法
+    function newcate(){
 
+    }
+    //修改新增文章的方法
+    function newArticle(){
+        if ($_GET["up_id"]){
+            $pdo=$this->mysqlCont();
+//            $sql="select * from {$_GET["up_tablename"]} where id={$_GET["up_id"]}";
+            $sql="select * from article where id='26'";
+            $result=$pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+            $result["0"]["article_title"];
+            $result["0"]["article_content"];
+        }
+    }
+
+    //删除文章的方法
+    function article_delete(){
+        if ($_GET["de_id"]){
+            $sql='delete from'.' '.$_GET["de_tablename"].' '.'where id='.$_GET["de_id"];
+            echo $sql;
+            $pdo=$this->mysqlCont();
+            $result = $pdo->exec($sql);
+            if ($result>0){
+                header("Location:/admin/index.php?menu={$_GET["menu"]}&page={$_GET["num"]}");
+//                echo "<script>alert('删除成功')</script>";
+            }else{
+                echo "<script>alert('删除失败')</script>";
+            }
+        }
+    }
 }
+/*$a=new MainDisplay();
+echo $a->newArticle();*/
+

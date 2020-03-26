@@ -9,15 +9,15 @@
 		private $limit;   		 				//SQL语句使用limit从句,限制获取记录个数
 		private $uri;     		 				//自动获取url的请求地址
 		private $pageNum; 		 				//总页数
-		private $page;							//当前页	
+		private $page;							//当前页
 		private $config = array(
 							'head' => "条记录",
 							'prev' => "上一页", 
-							'next' => "下一页", 
+							'next' => "Next",
 							'first'=> "首页", 
 							'last' => "末页"
 						); 						//在分页信息中显示内容，可以自己通过set()方法设置
-		private $listNum = 10; 					//默认分页列表显示的个数
+		private $listNum = 4; 					//默认分页列表显示的个数
 
 		/**
 			构造方法，可以设置分页类的属性
@@ -92,7 +92,7 @@
 			$html[6] = $this->nextlast();
 			$html[7] = $this->goPage();
 
-			$fpage = '<div style="font:12px \'\5B8B\4F53\',san-serif;">';
+			$fpage = '<div style="font:14px \'\5B8B\4F53\',san-serif;width:500px;position: absolute;left: 50%;transform: translate(-50%,-50%);text-align: center;">';
 			if(count($arr) < 1)
 				$arr = array(0, 1,2,3,4,5,6,7);
 				
@@ -155,7 +155,7 @@
 		/* 在对象内部使用的私有方法，用于获取上一页和首页的操作信息 */
 		private function firstprev(){
 			if($this->page > 1) {
-				$str = "&nbsp;<a style='color: #0e0e0e' href='{$this->uri}page=1'>{$this->config["first"]}</a>&nbsp;";
+				$str = "&nbsp;<a style='text-decoration: none;color: #0e0e0e' href='{$this->uri}page=1'>{$this->config["first"]}</a>";
 				$str .= "<a style='color: #0e0e0e' href='{$this->uri}page=".($this->page-1)."'>{$this->config["prev"]}</a>&nbsp;";
 				return $str;
 			}
@@ -172,17 +172,17 @@
 				$page = $this->page-$i;
 
 				if($page >= 1)
-					$linkPage .= "<a style='padding:1px 2px;border: solid 1px #0e0e0e;border-radius: 12px;color: #0e0e0e' href='{$this->uri}page={$page}'>{$page}</a>&nbsp;";
+					$linkPage .= "<a style='padding:4px 8px;border: solid 1px #0e0e0e;border-radius: 8px;color: #0e0e0e;text-decoration: none;' href='{$this->uri}page={$page}'>{$page}</a>&nbsp;";
 			}
 			/*当前页的信息 */
 			if($this->pageNum > 1)
-				$linkPage .= "<span style='border-radius: 12px;padding:2px 4px;background:#7ab5d3;color:white;'>{$this->page}</span>&nbsp;";
+				$linkPage .= "<span style='border-radius: 8px;padding:6px 10px;background:#2f96b4;color:white;'>{$this->page}</span>&nbsp;";
 			
 			/*当前页后面的列表 */
 			for($i=1; $i <= $inum; $i++){
 				$page = $this->page+$i;
 				if($page <= $this->pageNum)
-					$linkPage .= "<a style='padding:1px 2px;border: solid 1px #0e0e0e;border-radius: 12px;color: #0e0e0e' href='{$this->uri}page={$page}'>{$page}</a>&nbsp;";
+					$linkPage .= "<a style='padding:4px 8px;border: solid 1px #0e0e0e;border-radius: 8px;color: #0e0e0e;text-decoration: none;' href='{$this->uri}page={$page}'>{$page}</a>&nbsp;";
 				else
 					break;
 			}
@@ -193,8 +193,8 @@
 		/* 在对象内部使用的私有方法，获取下一页和尾页的操作信息 */
 		private function nextlast(){
 			if($this->page != $this->pageNum) {
-				$str = "&nbsp;<a style='color: #0e0e0e' href='{$this->uri}page=".($this->page+1)."'>{$this->config["next"]}</a>&nbsp;";
-				$str .= "&nbsp;<a style='color: #0e0e0e' href='{$this->uri}page=".($this->pageNum)."'>{$this->config["last"]}</a>&nbsp;";
+				$str = "<a style='padding:4px 8px;border: solid 1px #0e0e0e;border-radius: 8px;color: #0e0e0e;text-decoration: none;' href='{$this->uri}page=".($this->page+1)."'>{$this->config["next"]}</a>&nbsp;";
+//				$str .= "&nbsp;<a style='color: #0e0e0e' href='{$this->uri}page=".($this->pageNum)."'>{$this->config["last"]}</a>&nbsp;";
 				return $str;
 			}
 		}
@@ -214,6 +214,10 @@
 				return 0;
 			}
 		}
+		//获取当前页面位置
+        function pageNum(){
+		    return $this->page;
+        }
 	}
 
 	

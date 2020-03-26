@@ -1,5 +1,6 @@
 <?php
-include "models/cont.init.php";
+//前台入口
+//include "models/cont.init.php";//验证登录、开启session
 include "class/page.class.php";
 include "class/maindisplay.class.php";
 //----------------------------------------------
@@ -11,7 +12,6 @@ $nav2=$rows[1]["cate_name"];
 $nav3=$rows[2]["cate_name"];
 $nav4=$rows[3]["cate_name"];
 $nav5=$rows[4]["cate_name"];
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -44,7 +44,7 @@ $nav5=$rows[4]["cate_name"];
 	</ul>
 	<div class="search">  
         <form action="" method="get">
-            <input type="text" name="search_str" placeholder="输入关键字进行搜索" value="<?php echo $str;?>">
+            <input type="text" name="search_str" placeholder="输入关键字进行搜索" value="<?php echo $str;?> ">
             <input type="submit" name="search" value="搜索">
         </form>  
     </div> 
