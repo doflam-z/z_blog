@@ -3,16 +3,19 @@
 //include "../models/cont.init.php";
 include "../class/page.class.php";
 include "../class/maindisplay.class.php";
+include "../class/articleaccess.class.php";
+
+$access=new ArticleAccess();
 $display=new MainDisplay();
 switch ($_GET["menu"]){
     case "article":$main_display=$display->article_manage();$position=1;
         break;
-        //--------------------
     case "article_draft":$main_display=$display->article_draft();$position=1;
+        break;
+    case "article_display":$main_display=$access->articleDisplay();$position=1;
         break;
     case "newcate":$main_display=$display->newcate();$position=2;
         break;
-        //--------------------
     case "cate":$main_display=$display->cate_manage();$position=2;
         break;
     case "comment":$main_display=$display->comment_manage();$position=3;
@@ -35,6 +38,7 @@ switch ($position){
     <title>blog-admin</title>
     <link rel="shortcut icon" href="../public/favicon.ico" type="image/x-icon" />
     <link href="../public/css/blog_admin.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="../editormd/css/editormd.css" />
 </head>
 <body>
 <div class="main">
@@ -52,7 +56,6 @@ switch ($position){
         <?php
             $display->article_delete();
             echo $main_display;
-//            echo $a;
         ?>
         </div>
     </div>

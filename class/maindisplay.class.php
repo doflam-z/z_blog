@@ -110,7 +110,7 @@ class MainDisplay
         $main_display.= "<div class='main-content-nav'><ul class='content-nav'><li style='border-bottom: 2px solid #2f96b4 '><a href='?menu=article'>全部文章</a></li><li><a href='?menu=article_draft'>草稿箱</a></li></ul></div>";
         foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $value) {
             $id=$value["id"];
-            $main_display.= "<div class='box_content'><h3 class='font01'> {$value["article_title"]}</h3><div class='manage_button'><a href='?num={$page->pageNum()}&up_id=$id&up_tablename=$tablename' style='color: #149bdf'>修改</a> | <a href='?num={$page->pageNum()}&de_id=$id&de_tablename=$tablename' style='color: #e9322d'>删除</a></div></div></br>";
+            $main_display.= "<div class='box_content'><h3 class='font01'> <a href='?menu=article_display&articleid=$id'> {$value["article_title"]}</a>=>$id</h3><div class='manage_button'><a href='?num={$page->pageNum()}&up_id=$id&up_tablename=$tablename' style='color: #149bdf'>修改</a> | <a href='?num={$page->pageNum()}&de_id=$id&de_tablename=$tablename' style='color: #e9322d'>删除</a></div></div></br>";
         }
         $main_display.= '<div class="box_content_list" style="height: 50px">' .$page->fpage(5,6). '</div>';
         return $main_display;
@@ -131,7 +131,7 @@ class MainDisplay
         $main_display.= "<div class='main-content-nav'><ul class='content-nav'><li style='border-bottom: 2px solid #2f96b4 '><a href='?menu=cate'>全部分类</a></li></ul></div>";
         foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $value) {
             $id=$value["id"];
-            $main_display.= "<div class='box_content'><h3 class='font01'> {$value["cate_name"]}</h3><div class='manage_button'><a href='?menu=cate&up_id=$id&up_tablename=$tablename&num={$page->pageNum()}' style='color: #149bdf'>修改</a> | <a href='?&menu=cate&de_id=$id&de_tablename=$tablename&num={$page->pageNum()}' style='color: #e9322d'>删除</a></div></div></br>";
+            $main_display.= "<div class='box_content'><h3 class='font01'> {$value["cate_name"]}=>{$value["id"]}</h3><div class='manage_button'><a href='?menu=cate&up_id=$id&up_tablename=$tablename&num={$page->pageNum()}' style='color: #149bdf'>修改</a> | <a href='?&menu=cate&de_id=$id&de_tablename=$tablename&num={$page->pageNum()}' style='color: #e9322d'>删除</a></div></div></br>";
         }
         $main_display.= '<div class="box_content_list" style="height: 50px">' .$page->fpage(5,6). '</div>';
         return $main_display;
@@ -160,7 +160,7 @@ class MainDisplay
     //显示草稿箱的方法
     function article_draft()
     {
-        $tablename="t2";
+        $tablename="draft";
         $sql="select * from $tablename";
         $pdo=$this->mysqlCont();
         $rows=$pdo->query($sql)->fetchAll();
@@ -173,10 +173,21 @@ class MainDisplay
         $main_display.= "<div class='main-content-nav'><ul class='content-nav'><li><a href='?menu=article'>全部文章</a></li><li style='border-bottom: 2px solid #2f96b4'><a href='?menu=article_draft'>草稿箱</a></li></ul></div>";
         foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $value) {
             $id=$value["id"];
-            $main_display.= "<div class='box_content'><h3 class='font01'> {$value["sname"]} {$value["id"]}</h3><div class='manage_button'><a href='?menu=article_draft&up_id=$id&up_tablename=$tablename&num={$page->pageNum()}' style='color: #149bdf'>修改</a> | <a href='?menu=article_draft&de_id=$id&de_tablename=$tablename&num={$page->pageNum()}' style='color: #e9322d'>删除</a></div></div></br>";
+            $main_display.= "<div class='box_content'><h3 class='font01'> {$value["article_title"]} {$value["id"]}</h3><div class='manage_button'><a href='?menu=article_draft&up_id=$id&up_tablename=$tablename&num={$page->pageNum()}' style='color: #149bdf'>修改</a> | <a href='?menu=article_draft&de_id=$id&de_tablename=$tablename&num={$page->pageNum()}' style='color: #e9322d'>删除</a></div></div></br>";
         }
         $main_display.= '<div class="box_content_list" style="height: 50px">' .$page->fpage(5,6). '</div>';
         return $main_display;
+    }
+
+    //显示文章内容的方法
+    function article_display()
+    {
+
+
+        include "class/HyperDown/Parser.php";
+        $parser = new HyperDown\Parser;
+        $html = $parser->makeHtml($str);
+        echo "<div class=\"markdown-body editormd-preview-container\"><?php echo $html?></div>";
     }
 
     //新增分类的方法

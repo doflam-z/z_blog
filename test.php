@@ -1,16 +1,80 @@
 <?php
 try {
     $pdo = new PDO("mysql:host=localhost;dbname=phptest1", "root", "root");
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);   //设置PDO显示异常
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);   //设置PDO显示异常
 } catch (PDOException $e) {
     echo '数据库连接失败' . $e->getMessage();
 }
-$article=$_POST["test-editor-html-code"];
-//echo $article;
-//$str=htmlspecialchars($article, ENT_QUOTES);
-//echo $str;
-//$sql="insert into article (article_title,article_content) value('Nginx获取Let’s Encrypt SSL证书',$str)";
-$sql="insert into article (article_title,article_content) value('TEST','<p>服务器：centos7<br>v2ray：官网一键安装脚本<br>nginx：yum安装</p> <h2 id=\"h2--nginx-v2ray\"><a name=\"安装nginx、v2ray\" class=\"reference-link\"></a><span class=\"header-link octicon octicon-link\"></span>安装nginx、v2ray</h2><p>执行官网一键安装脚本，<a href=\"https://www.v2ray.com/chapter_00/install.html\">v2ray官网地址</a></p> <pre><code>[root]# bash &lt;(curl -L -s https://install.direct/go.sh) </code></pre><p>安装nginx软件源+安装nginx</p> <pre><code>[root~]# rpm -ivh http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm [root~]# yum install nginx -y </code></pre><h2 id=\"h2--let-s-encrypt-ssl-nginx-let-s-encrypt-ssl-\"><a name=\"获取Let’s Encrypt SSL证书方法可查看 Nginx获取Let’s Encrypt SSL证书\" class=\"reference-link\"></a><span class=\"header-link octicon octicon-link\"></span>获取Let’s Encrypt SSL证书方法可查看<a href=\"https://blog.csdn.net/qq_43308140/article/details/102853956\">Nginx获取Let’s Encrypt SSL证书</a></h2><p>获取证书成功后证书会保存至\"/etc/letsencrypt/live/你申请的域名/\" 目录下。</p> <h2 id=\"h2--v2ray\"><a name=\"配置v2ray\" class=\"reference-link\"></a><span class=\"header-link octicon octicon-link\"></span>配置v2ray</h2><p>打开/etc/v2ray/config.json文件，删除所有内容，填入以下配置。</p> <pre><code>[root~]# vi /etc/v2ray/config.json { &quot;inbounds&quot;: [ { &quot;port&quot;: 12306, &quot;listen&quot;:&quot;127.0.0.1&quot;, &quot;protocol&quot;: &quot;vmess&quot;, &quot;settings&quot;: { &quot;clients&quot;: [ { &quot;id&quot;: &quot;eec3e54c-68ba-4b7a-bfe2-a98b9821c143&quot;, &quot;alterId&quot;: 64 } ] }, &quot;streamSettings&quot;: { &quot;network&quot;: &quot;ws&quot;, //使用的协议 &quot;wsSettings&quot;: { &quot;path&quot;: &quot;/ws&quot; //这个路径 必须与nginx配置的路径相同 } } } ], &quot;outbounds&quot;: [ { &quot;protocol&quot;: &quot;freedom&quot;, &quot;settings&quot;: {} } ] } </code></pre><h2 id=\"h2--nginx\"><a name=\"配置nginx\" class=\"reference-link\"></a><span class=\"header-link octicon octicon-link\"></span>配置nginx</h2><p>新建nginx配置文件，在/etc/nginx/conf.d/路径下新建v2ray.conf文件</p> <pre><code>[root~]# vi /etc/nginx/conf.d/v2ray.conf server { listen 443 ssl; ssl on; ssl_certificate /etc/letsencrypt/live/你 的域名/fullchain.pem; //这是你申请好的证书路径 ssl_certificate_key /etc/letsencrypt/live/你的域名/privkey.pem; //这是你 申请的证书密钥路径 ssl_protocols TLSv1 TLSv1.1 TLSv1.2; ssl_ciphers HIGH:!aNULL:!MD5; server_name linode.doflam.top; location /ws { //这个路径要与config.json文件里配置的相同 proxy_redirect off; proxy_pass http://127.0.0.1:12306; proxy_http_version 1.1; proxy_set_header Upgrade ￥http_upgrade; proxy_set_header Connection &quot;upgrade&quot;; proxy_set_header Host ￥http_host; } } </code></pre><p>检查nginx配置文件</p> <pre><code>[root~]# nginx -t nginx: the configuration file /etc/nginx/nginx.conf syntax is ok nginx: configuration file /etc/nginx/nginx.conf test is successful </code></pre><p>重启nginx、v2ray</p> <pre><code>[root~]# systemctl restart nginx v2ray </code></pre><p>客户端连接，完成。<br>注意服务器防火墙需要开放443端口。</p>')";
-//echo $sql;
-$result=$pdo->exec($sql);
+if (isset($_POST["publish"])){
+    $tablename="article";
+}else{
+    $tablename="draft";
+}
+//---------存入方法
+//$article=$_POST["test-editor-html-code"];
+$article=$_POST["mark"];
+//$str=htmlChang($article);
+$query="insert into $tablename (article_title,article_content) value('<a href=?menu=article_display&title={$_POST["article_title"]}>{$_POST["article_title"]}</a>','$article')";
+$result=$pdo->exec($query);
 echo $result;
+/*echo "<pre>";
+print_r($_POST);
+echo "</pre>";*/
+//---------存入方法
+
+//---------读取方法
+//$article_title=$_GET["title"];
+//$article_title="test3";
+//$sql="select article_content from article where article_title='test3'";
+include "class/HyperDown/Parser.php";
+$parser = new HyperDown\Parser;
+$sql="select article_content from article where id='{$_GET["articleid"]}'";
+$result=$pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+$str=$result[0]["article_content"];
+$html = $parser->makeHtml($str);
+echo "<div class=\"markdown-body editormd-preview-container\"><?php echo $html?></div>";
+
+
+//替换html冲突符号方法
+function htmlChang($article)
+{
+    $str=htmlspecialchars($article, ENT_QUOTES);
+    $patterns=array();
+    $patterns[0]='/\,/';
+    $patterns[1]='/\;/';
+    $patterns[2]='/\$/';
+    $patterns[3]='/\(/';
+    $patterns[4]='/\)/';
+    $patterns[5]='/\`/';
+    $keywords=array();
+    $keywords[0]='@《@';
+    $keywords[1]='@|@';
+    $keywords[2]='@4@';
+    $keywords[3]='@9@';
+    $keywords[4]='@0@';
+    $keywords[5]='@-@';
+    return $str=preg_replace($patterns,$keywords,$str);
+}
+
+//恢复html冲突符号方法
+function htmlRegain($str)
+{
+    $patterns=array();
+    $patterns[0]='/(@《@)/';
+    $patterns[1]='/(@\|@)/';
+    $patterns[2]='/(@4@)/';
+    $patterns[3]='/(@9@)/';
+    $patterns[4]='/(@0@)/';
+    $patterns[5]='/(@\-@)/';
+    $keywords=array();
+    $keywords[0]=',';
+    $keywords[1]=';';
+    $keywords[2]='$';
+    $keywords[3]='(';
+    $keywords[4]=')';
+    $keywords[5]='`';
+    $str=preg_replace($patterns,$keywords,$str);
+    $article=htmlspecialchars_decode($str,ENT_QUOTES);
+    return $article;
+}
+
