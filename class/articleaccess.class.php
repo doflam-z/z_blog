@@ -9,8 +9,7 @@ class ArticleAccess{
         }else{
             $tablename="draft";
         }
-        $article=$_POST["mark"];
-        $query="insert into $tablename (article_title,article_content) value('{$_POST["article_title"]}','$article')";
+        $query="insert into $tablename (article_title,article_content,cate_name) value('{$_POST["article_title"]}','{$_POST["mark"]}','{$_POST["category"]}')";
         $result=$pdo->exec($query);
         if($result>0){
             echo "执行成功";
@@ -18,12 +17,12 @@ class ArticleAccess{
             echo "执行失败";
         }
     }
-    //显示文章方法
+    //查看文章方法
     function articleDisplay(){
         include "HyperDown/Parser.php";
         $parser = new HyperDown\Parser;
         $pdo=$this->mysqlCont();
-        $sql="select * from article where id='{$_GET["articleid"]}'";
+        $sql="select * from {$_GET["tablename"]} where id='{$_GET["articleid"]}'";
         $result=$pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         $str=$result[0]["article_content"];
         $title=$result[0]["article_title"];
@@ -32,6 +31,28 @@ class ArticleAccess{
         $result.= "<div class='markdown-body editormd-preview-container'><h2>$title</h2><?php echo $html?></div>";
         return $result;
     }
+    //读取markdown源码
+    function take($id,$tablename){
+        $pdo=$this->mysqlCont();
+        $sql="select * from $tablename where id='$id'";
+        $result=$pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        $article_id=$result[0]["article_title"];
+        $article_content=$result[0]["article_content"];
+        $result=array("title"=>$article_id,"content"=>$article_content);
+        return $result;
+    }
+    //查询分类
+    function category(){
+        $pdo=$this->mysqlCont();
+        $sql="select cate_name from category;";
+        $rows=$pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        $result='';
+        foreach($rows as $values){
+            $result.= "<option  value='{$values["cate_name"]}'>{$values["cate_name"]}</option>";
+        }
+        return $result;
+    }
+
     //html文件转化方法
     function htmlChang($str)
     {

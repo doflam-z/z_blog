@@ -1,9 +1,17 @@
 <?php
 include "class/articleaccess.class.php";
+$access=new ArticleAccess();
     if (isset($_POST["save"]) or isset($_POST["publish"])){
-        $access=new ArticleAccess();
         $access->articleSave();
         exit;
+    }
+
+    if (isset($_GET["article_id"])){
+        $id=$_GET["article_id"];
+        $teblename=$_GET["tablename"];
+        $result=$access->take($id,$teblename);
+        $title= $result["title"];
+        $content=$result["content"];
     }
 ?>
 <!DOCTYPE html>
@@ -16,22 +24,56 @@ include "class/articleaccess.class.php";
             margin: 0px;
             padding: 0px;
         }
-        .sub{
+        .button{
             border-radius: 6px;
-            padding: 4px 8px;
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 6px 8px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
             font-size: 14px;
-            color: #fbfdff;
+            margin: 4px 2px;
+            cursor: pointer;
+            -webkit-transition-duration: 0.4s; /* Safari */
+            transition-duration: 0.4s;/*添加按钮hover*/
         }
-        #nav a:hover{ color: #fff}
+        .button1{
+            /*box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);*/
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+            background: #0d96dc;
+        }
+        .button1:hover{
+            /*box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);*/
+            background-color: #084f73;
+        }
+        .button2{
+            box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);/*添加按钮阴影*/
+            background: #87a4b3;
+        }
+        .button2:hover{
+            background: #44555f;
+        }
+        #nav a{
+            color: #87a4b3;
+            text-decoration: none;
+        }
+        #nav a:hover{
+            color: #0d96dc;
+        }
     </style>
 </header>
 <body>
 <form action="" method="POST">
     <div id="nav" style="height: 40px">
-        <span style="line-height: 40px;position: relative;left: 20px;"><a style="color: #0e0e0e;text-decoration: none" href="admin/index.php">返回管理</a>&nbsp;&nbsp;&nbsp;标题&nbsp;
+        <span style="line-height: 40px;position: relative;left: 20px;color: #57555f;"><a  href="admin/index.php">返回管理</a>&nbsp;&nbsp;&nbsp;标题=>
             <input style="width:1500px;height:30px;border-radius: 6px;font-size: 18px;" type="text" name="article_title" value="<?php echo $title?>">
-            <input class="sub" style="background: #0d96dc;" type="submit" name="publish" value="发布文章">
-            <input class="sub" style="background: #87a4b3;" type="submit" name="save" value="保存">
+            <button class="button button1" type="submit" name="publish">发布文章</button>
+            <button class="button button2" type="submit" name="save">保存</button>
+            <select name="category" style="color: #0e0e0e;padding: 2px 4px;border-radius: 6px">
+                <?php echo $access->category();?>
+            </select>
         </span>
     </div>
     <div id="test-editor">
