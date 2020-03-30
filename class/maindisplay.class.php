@@ -107,12 +107,13 @@ class MainDisplay
         $sql = $sql.' '.$page->limit;
         $result = $pdo->query($sql);
         $main_display=null;
-        $main_display.= "<div class='main-content-nav'><ul class='content-nav'><li style='border-bottom: 2px solid #2f96b4 '><a href='?menu=article'>全部文章</a></li><li><a href='?menu=article_draft'>草稿箱</a></li></ul></div>";
+        $main_display.= "<div class='main-content-nav'><ul class='content-nav'><li style='border-bottom: 2px solid #2f96b4 '><a style='color: #0e0e0e' href='?menu=article'><b>全部文章</b></a></li><li><a href='?menu=article_draft'>草稿箱</a></li></ul></div>";
         foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $value) {
             $id=$value["id"];
-            $main_display.= "<div class='box_content'><h3 class='font01'> <a href='/markdown.php?article_id=$id&tablename=$tablename'> {$value["article_title"]}</a>=>$id</h3><div class='manage_button'><a href='?menu=article_display&articleid=$id&tablename=$tablename'>查看</a> | <a href='?num={$page->pageNum()}&de_id=$id&de_tablename=$tablename' style='color: #e9322d'>删除</a></div></div></br>";
+            $time=date('Y/m/d H:i:s',$value["article_time"]);
+            $main_display.= "<div class='box_content'><h3 class='font01'> <a href='/markdown.php?article_id=$id&tablename=$tablename'> {$value["article_title"]}</a>=>$id=>$time</h3><div class='manage_button'><a href='?menu=article_display&articleid=$id&tablename=$tablename'>查看</a> | <a href='?num={$page->pageNum()}&de_id=$id&de_tablename=$tablename' style='color: #e9322d'>删除</a></div></div></br>";
         }
-        $main_display.= '<div class="box_content_list" style="height: 50px">' .$page->fpage(5,6). '</div>';
+        $main_display.= '<div class="box_content_list" style="height: 30px">' .$page->fpage(5,6). '</div>';
         return $main_display;
     }
     //显示草稿箱的方法
@@ -128,7 +129,7 @@ class MainDisplay
         $sql = $sql.' '.$page->limit;
         $result = $pdo->query($sql);
         $main_display=null;
-        $main_display.= "<div class='main-content-nav'><ul class='content-nav'><li><a href='?menu=article'>全部文章</a></li><li style='border-bottom: 2px solid #2f96b4'><a href='?menu=article_draft'>草稿箱</a></li></ul></div>";
+        $main_display.= "<div class='main-content-nav'><ul class='content-nav'><li><a href='?menu=article'>全部文章</a></li><li style='border-bottom: 2px solid #2f96b4'><a style='color: #0e0e0e' href='?menu=article_draft'><b>草稿箱</b></a></li></ul></div>";
         foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $value) {
             $id=$value["id"];
             $main_display.= "<div class='box_content'><h3 class='font01'> <a href='/markdown.php?article_id=$id&tablename=$tablename'> {$value["article_title"]}</a> --{$value["cate_name"]}--$id </h3><div class='manage_button'><a href='?menu=article_display&articleid=$id&tablename=$tablename'>查看</a> | <a href='?menu=article_draft&num={$page->pageNum()}&de_id=$id&de_tablename=$tablename' style='color: #e9322d'>删除</a></div></div></br>";
@@ -150,10 +151,11 @@ class MainDisplay
         $sql = $sql.' '.$page->limit;
         $result = $pdo->query($sql);
         $main_display=null;
-        $main_display.= "<div class='main-content-nav'><ul class='content-nav'><li style='border-bottom: 2px solid #2f96b4 '><a href='?menu=cate'>全部分类</a></li><li style='border-bottom: 2px solid #2f96b4 '><form action='' method='post'><button type='submit'>新增分类</button></form></li></ul></div>";
+        $main_display.= "<div class='main-content-nav'><ul class='content-nav'><li style='border-bottom: 2px solid #2f96b4 '><a href='?menu=cate'>全部分类</a></li><form action='' method='post'><button class='button button_cate' type='submit'><a class='cateadd' href='?menu=cate_add'>新增分类</a></button></form></ul></div>";
         foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $value) {
             $id=$value["id"];
-            $main_display.= "<div class='box_content'><h3 class='font01'> {$value["cate_name"]}=>{$value["id"]}</h3><div class='manage_button'><a href='?menu=cate&up_id=$id&up_tablename=$tablename&num={$page->pageNum()}' style='color: #149bdf'>编辑</a> | <a href='?&menu=cate&de_id=$id&de_tablename=$tablename&num={$page->pageNum()}' style='color: #e9322d'>删除</a></div></div></br>";
+            $cate_name=$value["cate_name"];
+            $main_display.= "<div class='box_content'><h3 class='font01'> {$value["cate_name"]}=>{$value["id"]}</h3><div class='manage_button'><a href='?menu=cate_edit&up_id=$id&up_name=$cate_name' style='color: #149bdf'>编辑</a> | <a href='?&menu=cate&de_id=$id&de_tablename=$tablename&num={$page->pageNum()}' style='color: #e9322d'>删除</a></div></div></br>";
         }
         $main_display.= '<div class="box_content_list" style="height: 50px">' .$page->fpage(5,6). '</div>';
         return $main_display;
@@ -180,19 +182,59 @@ class MainDisplay
         return $main_display;
     }
 
-    //显示文章内容的方法
-    function article_display()
-    {
-        include "class/HyperDown/Parser.php";
-        $parser = new HyperDown\Parser;
-        $html = $parser->makeHtml($str);
-        echo "<div class=\"markdown-body editormd-preview-container\"><?php echo $html?></div>";
-    }
-
-    //新增分类的方法
+    //新增、修改分类的方法
     function newcate(){
-
+        $result='';
+        if($_GET["menu"]=="cate_edit"){
+            $str="修改";$upname=$_GET["up_name"];$cate="cate_edit";
+            $up_id=$_GET["up_id"];
+        }elseif ($_GET["menu"]=="cate_add"){
+            $str="新增";$cate="cate_add";
+        }
+        $result.= '<a href="/admin/index.php?menu=cate" style="text-decoration: none;color: #8a8a8a;"><=返回分类管理</a><form action="/admin/index.php?menu='.$cate.'&up_id='.$up_id.'" method="post">
+    <table align="center" width="300">
+        <caption><h3>'.$str.'分类</h3></caption>
+        <tr><td>分类名称&nbsp;&nbsp;<input style="border-radius: 6px;border: 1px solid #b1acac; height: 25px;width: 175px;" type="text" name="cate_name"value="'.$upname.'"></td></tr>
+        <tr><td><button class="button button_cateadd" type="submit" name="newcate" style="position: relative;left: 5px;margin-bottom: 20px;">提交</button></td></tr>
+    </table>
+</form>';
+        if ($_GET["menu"]=="cate_add" and isset($_POST["newcate"]) and $_POST["cate_name"]!=='') {
+            $sql = "insert into category (cate_name) values('{$_POST["cate_name"]}')";
+            $pdo=$this->mysqlCont();
+            try {
+                $num = $pdo->exec($sql);
+            } catch (PDOException $e) {
+                $result.= 'SQL语句执行错误：' . $e->getMessage().'</br>';
+            }
+            if ($num > 0) {
+                header("Location:/admin/index.php?menu=cate");
+            } else {
+                $result.=  "执行失败";
+            }
+        }elseif ($_GET["menu"]=="cate_edit" and isset($_POST["newcate"]) and $_POST["cate_name"]!==''){
+            $result=print_r($_POST);
+            $result=print_r($_GET);
+            $sql = "update category set cate_name='{$_POST["cate_name"]}' where id='{$_GET["up_id"]}'";
+            $result.=$sql;
+            $pdo=$this->mysqlCont();
+            try {
+                $num = $pdo->exec($sql);
+            } catch (PDOException $e) {
+                $result.= 'SQL语句执行错误：' . $e->getMessage().'</br>';
+            }
+            if ($num > 0) {
+                header("Location:/admin/index.php?menu=cate");
+            } else {
+                $result.=  "执行失败";
+            }
+        }elseif (isset($_POST["newcate"]) and $_POST["cate_name"]==''){ $result.="分类名称不能为空！";}
+/*        $result.=print_r($_GET);
+        $result.=print_r($_POST);
+        $result.= $sql.'1111111';*/
+        return $result;
     }
+
+
     //查看新增文章的方法
     function newArticle(){
         if ($_GET["up_id"]){
@@ -220,7 +262,5 @@ class MainDisplay
             }
         }
     }
-}
-/*$a=new MainDisplay();
-echo $a->newArticle();*/
 
+}

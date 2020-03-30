@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>test</title>
+	<style type="text/css">
+		.button{
+			border-radius: 6px;
+			border: none;
+			color: white;
+			padding: 6px 8px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 14px;
+			cursor: pointer;     /*获取鼠标焦点*/
+			-webkit-transition-duration: 0.4s; /* Safari */
+			transition-duration: 0.4s;/*添加按钮hover*/
+		}
+		.button_cateadd{background-color:#0d96dc;}
+		.button_cateadd:hover{background-color: #084f73; }
+	</style>
+</head>
+<body>
+		<form action="" method="post">
+			<table align="center" width="300">
+				<caption><h3>新增分类</h3></caption>
+				<tr><td>分类名称:<input style="border-radius: 6px; height: 25px" type="text" name="cate_name"></td></tr>
+				<tr><td></td></tr>
+				<tr><td><button class="button button_cateadd" type="submit" name="cate_add">提交</button></td></tr>
+			</table>
+		</form>
+</body>
+</html>

@@ -14,7 +14,9 @@ switch ($_GET["menu"]){
         break;
     case "article_display":$main_display=$access->articleDisplay();$position=1;
         break;
-    case "newcate":$main_display=$display->newcate();$position=2;
+    case "cate_add":$main_display=$display->newcate();$position=2;
+        break;
+    case "cate_edit":$main_display=$display->newcate();$position=2;
         break;
     case "cate":$main_display=$display->cate_manage();$position=2;
         break;

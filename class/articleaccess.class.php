@@ -9,8 +9,16 @@ class ArticleAccess{
         }else{
             $tablename="draft";
         }
-        $query="insert into $tablename (article_title,article_content,cate_name) value('{$_POST["article_title"]}','{$_POST["mark"]}','{$_POST["category"]}')";
-        $result=$pdo->exec($query);
+        $time=time();
+        $article_content=$_POST["mark"];
+        $article_content=$this->htmlChang($article_content);
+        $query="insert into $tablename (article_title,arti1cle_content,cate_name,article_time) value('{$_POST["article_title"]}','$article_content','{$_POST["category"]}','$time')";
+//        $result=$pdo->exec($query);
+        try {
+            $result=$pdo->exec($query);
+        } catch (PDOException $e) {
+            echo 'SQL语句执行错误：' . $e->getMessage().'</br>';
+        }
         if($result>0){
             echo "执行成功";
         }else{
@@ -103,5 +111,3 @@ class ArticleAccess{
         return $pdo;
     }
 }
-/*$access=new ArticleAccess();
-echo $access->articleDisplay();*/
