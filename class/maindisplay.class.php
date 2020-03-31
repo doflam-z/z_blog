@@ -110,8 +110,11 @@ class MainDisplay
         $main_display.= "<div class='main-content-nav'><ul class='content-nav'><li style='border-bottom: 2px solid #2f96b4 '><a style='color: #0e0e0e' href='?menu=article'><b>全部文章</b></a></li><li><a href='?menu=article_draft'>草稿箱</a></li></ul></div>";
         foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $value) {
             $id=$value["id"];
-            $time=date('Y/m/d H:i:s',$value["article_time"]);
-            $main_display.= "<div class='box_content'><h3 class='font01'> <a href='/markdown.php?article_id=$id&tablename=$tablename'> {$value["article_title"]}</a>=>$id=>$time</h3><div class='manage_button'><a href='?menu=article_display&articleid=$id&tablename=$tablename'>查看</a> | <a href='?num={$page->pageNum()}&de_id=$id&de_tablename=$tablename' style='color: #e9322d'>删除</a></div></div></br>";
+            $views=$value["article_views"];
+            $comment=$value["comment_num"];
+            $time=date('Y年m月d日 H:i:s',$value["article_time"]);
+            $main_display.= "<div class='box_content'><h3><a href='/markdown.php?article_id=$id&tablename=$tablename'> {$value["article_title"]}</a></h3><div class='span'
+<span class='time'>$time</span> <span class='read'>&nbsp;&nbsp;&nbsp;<img src='../public/image/图标/1158849.png'>&nbsp;$views</span>&nbsp;&nbsp;<span class='comment'><img src='../public/image/图标/1222902.png'>&nbsp;$comment</span></div><div class='manage_button'><a href='?menu=article_display&articleid=$id&tablename=$tablename'>查看</a> | <a href='?num={$page->pageNum()}&de_id=$id&de_tablename=$tablename' style='color: #e9322d'>删除</a></div></div></br>";
         }
         $main_display.= '<div class="box_content_list" style="height: 30px">' .$page->fpage(5,6). '</div>';
         return $main_display;
@@ -132,7 +135,9 @@ class MainDisplay
         $main_display.= "<div class='main-content-nav'><ul class='content-nav'><li><a href='?menu=article'>全部文章</a></li><li style='border-bottom: 2px solid #2f96b4'><a style='color: #0e0e0e' href='?menu=article_draft'><b>草稿箱</b></a></li></ul></div>";
         foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $value) {
             $id=$value["id"];
-            $main_display.= "<div class='box_content'><h3 class='font01'> <a href='/markdown.php?article_id=$id&tablename=$tablename'> {$value["article_title"]}</a> --{$value["cate_name"]}--$id </h3><div class='manage_button'><a href='?menu=article_display&articleid=$id&tablename=$tablename'>查看</a> | <a href='?menu=article_draft&num={$page->pageNum()}&de_id=$id&de_tablename=$tablename' style='color: #e9322d'>删除</a></div></div></br>";
+            $time=date('Y年m月d日 H:i:s',$value["article_time"]);
+            $main_display.= "<div class='box_content'><h3 class='font01'> <a href='/markdown.php?article_id=$id&tablename=$tablename'> {$value["article_title"]}</a> </h3><div class='span'
+<span class='time'>$time</span> <span class='read'>&nbsp;&nbsp;&nbsp;<img src='../public/image/图标/1158849.png'>&nbsp;1</span>&nbsp;&nbsp;<span class='comment'><img src='../public/image/图标/1222902.png'>&nbsp;0</span></div><div class='manage_button'><a href='?menu=article_display&articleid=$id&tablename=$tablename'>查看</a> | <a href='?menu=article_draft&num={$page->pageNum()}&de_id=$id&de_tablename=$tablename' style='color: #e9322d'>删除</a></div></div></br>";
         }
         $main_display.= '<div class="box_content_list" style="height: 50px">' .$page->fpage(5,6). '</div>';
         return $main_display;
@@ -155,7 +160,7 @@ class MainDisplay
         foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $value) {
             $id=$value["id"];
             $cate_name=$value["cate_name"];
-            $main_display.= "<div class='box_content'><h3 class='font01'> {$value["cate_name"]}=>{$value["id"]}</h3><div class='manage_button'><a href='?menu=cate_edit&up_id=$id&up_name=$cate_name' style='color: #149bdf'>编辑</a> | <a href='?&menu=cate&de_id=$id&de_tablename=$tablename&num={$page->pageNum()}' style='color: #e9322d'>删除</a></div></div></br>";
+            $main_display.= "<div class='box_content'><h3 class='font01'> {$value["cate_name"]}</h3><div class='manage_button'><a href='?menu=cate_edit&up_id=$id&up_name=$cate_name' style='color: #149bdf'>编辑</a> | <a href='?&menu=cate&de_id=$id&de_tablename=$tablename&num={$page->pageNum()}' style='color: #e9322d'>删除</a></div></div></br>";
         }
         $main_display.= '<div class="box_content_list" style="height: 50px">' .$page->fpage(5,6). '</div>';
         return $main_display;
@@ -262,5 +267,18 @@ class MainDisplay
             }
         }
     }
+
+    //test
+/*    function list(){
+        $button_edit="/markdown.php?article_id=$id&tablename=$tablename";
+        $button_title="{$value["article_title"]}";
+        $button_view="?menu=article_display&articleid=$id&tablename=$tablename";
+        $button_delete="?num={$page->pageNum()}&de_id=$id&de_tablename=$tablename";
+        $button_comment="";
+        $read="";
+        $result='';
+        $result.="<div class='box_content'><h3><a href='$edit'>$display1</a></h3><div class='span'><span class='time'>$time</span> <span class='read'>&nbsp;&nbsp;&nbsp;<img src='../public/image/图标/1158849.png'>&nbsp;$read</span>&nbsp;&nbsp;<span class='comment'><img src='../public/image/图标/1222902.png'>&nbsp;$comment</span></div><div class='manage_button'><a href='$value2'>查看</a> | <a href='$value3' style='color: #e9322d'>删除</a></div></div></br>";
+        return $result;
+    }*/
 
 }

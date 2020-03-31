@@ -1,23 +1,33 @@
 <?php
 //文章存取类
 class ArticleAccess{
+    //连接数据库
+    function mysqlCont(){
+        try {
+            $pdo = new PDO("mysql:host=localhost;dbname=phptest1", "root", "root");
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);   //设置PDO显示异常
+        } catch (PDOException $e) {
+            echo '数据库连接失败' . $e->getMessage();
+        }
+        return $pdo;
+    }
     //保存方法
     function articleSave(){
-        $pdo=$this->mysqlCont();
         if (isset($_POST["publish"])){
             $tablename="article";
         }else{
             $tablename="draft";
         }
+        $pdo=$this->mysqlCont();
         $time=time();
         $article_content=$_POST["mark"];
-        $article_content=$this->htmlChang($article_content);
-        $query="insert into $tablename (article_title,arti1cle_content,cate_name,article_time) value('{$_POST["article_title"]}','$article_content','{$_POST["category"]}','$time')";
+        $article_content=$this->articleChang($article_content);
+        $query="insert into $tablename (article_title,article_content,cate_name,article_time) value('{$_POST["article_title"]}','$article_content','{$_POST["category"]}','$time')";
 //        $result=$pdo->exec($query);
         try {
             $result=$pdo->exec($query);
         } catch (PDOException $e) {
-            echo 'SQL语句执行错误：' . $e->getMessage().'</br>';
+            echo "SQL语句执行错误:{$e->getMessage()}</br>";
         }
         if($result>0){
             echo "执行成功";
@@ -25,12 +35,39 @@ class ArticleAccess{
             echo "执行失败";
         }
     }
+    //修改文章方法
+/*    function articleEdit(){
+        if (isset($_POST["publish_edit"])){
+            $tablename="article";
+        }else{
+            $tablename="draft";
+        }
+        $pdo=$this->mysqlCont();
+        $time=time();
+        $article_content=$_POST["mark"];
+        $article_content=$this->articleChang($article_content);
+//        $query="insert into $tablename (article_title,article_content,cate_name,article_time) value('{$_POST["article_title"]}','$article_content','{$_POST["category"]}','$time')";
+        $query="update $tablename (article_title,article_content,cate_name,article_time) value('{$_POST["article_title"]}','$article_content','{$_POST["category"]}','$time') where id='{$_POST["article_id"]}'";
+        try {
+            $result=$pdo->exec($query);
+        } catch (PDOException $e) {
+            echo "SQL语句执行错误:{$e->getMessage()}</br>";
+        }
+        if($result>0){
+            echo "执行成功";
+        }else{
+            echo "执行失败";
+        }
+    }*/
+
     //查看文章方法
     function articleDisplay(){
         include "HyperDown/Parser.php";
         $parser = new HyperDown\Parser;
         $pdo=$this->mysqlCont();
         $sql="select * from {$_GET["tablename"]} where id='{$_GET["articleid"]}'";
+        $article_id=$_GET["articleid"];
+        $this->readNum($article_id);
         $result=$pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         $str=$result[0]["article_content"];
         $title=$result[0]["article_title"];
@@ -61,7 +98,19 @@ class ArticleAccess{
         return $result;
     }
 
-    //html文件转化方法
+    function articleChang($article_content)
+    {
+        $patterns="/\'/";
+        $keywords="\'";
+        return $str=preg_replace($patterns,$keywords,$article_content);
+    }
+    //增加文章阅读数
+    function readNum($article_id){
+        $sql="update article set article_views=article_views+1 where id='$article_id'";
+        $pdo=$this->mysqlCont();
+        $pdo->exec($sql);
+    }
+/*    //html文件转化方法
     function htmlChang($str)
     {
         $patterns=array();
@@ -99,15 +148,19 @@ class ArticleAccess{
         $keywords[4]=')';
         $keywords[5]='`';
         return $str=preg_replace($patterns,$keywords,$str);
-    }
-    //连接数据库
-    function mysqlCont(){
+    }*/
+
+/*    function test(){
+        $pdo=$this->mysqlCont();
+        $sql="insert into tw (bookname) value('asdasd')";
         try {
-            $pdo = new PDO("mysql:host=localhost;dbname=phptest1", "root", "root");
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);   //设置PDO显示异常
-        } catch (PDOException $e) {
-            echo '数据库连接失败' . $e->getMessage();
+            $result=$pdo->exec($sql);
+            echo $result;
+        }catch (PDOException $e){
+            echo "错误".$e;
         }
-        return $pdo;
-    }
+    }*/
 }
+/*$a=new ArticleAccess();
+$str="a'b'c'd'";
+echo $a->articleChang($str);*/

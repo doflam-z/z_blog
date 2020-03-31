@@ -1,6 +1,6 @@
 <?php
 //后台入口
-//include "../models/cont.init.php";
+include "../models/cont.init.php";
 include "../class/page.class.php";
 include "../class/maindisplay.class.php";
 include "../class/articleaccess.class.php";
@@ -62,7 +62,14 @@ switch ($position){
         </div>
     </div>
     <div class="main-right">
-    当前用户：
+        <div class="avatar"></div>
+        <div class="user">
+            <table width="260">
+                <caption style="margin-bottom: 20px;">当前用户： admin</caption>
+                <tr><td>文章总数</td><td>评论总数</td><td>文章访问量</td></tr>
+                <tr><td>8</td><td>67</td><td>331</td></tr>
+            </table>
+        </div>
     </div>
 
 </div>

@@ -74,9 +74,11 @@ input,button{
 }
 
 .main-right{
-	width: 320px;height: 600px;
+	width: 320px;height: 400px;
 	background: #fafcfd;
-	position: fixed;top: 70px;right: 30px;
+	position: fixed;top: 70px;right: 40px;
+	background-image: url("../image/box_right (2).jpg");
+	background-repeat:no-repeat;
 }
 
 .main-content-nav{
@@ -128,6 +130,11 @@ input,button{
 	border-bottom: 1px solid #e2e0e0;
 }
 
+.box_content a{
+	text-decoration: none;color: #5d5d5d;
+}
+.box_content a:hover{color: #4e7cc2;}
+
 .box_content_list{
 	position: relative;
 	width: 100%;
@@ -151,6 +158,8 @@ input,button{
 .button_cate:hover{background-color:#72a9c5;}
 .button_cate:hover .cateadd{color:#fff;}
 .cateadd{text-decoration: none;color: #72a9c5;}
-
-
+.span{color:#757575;font-size: 12px;position: relative;top: 18px;}
+.avatar{width: 100px;height: 100px;border-radius: 100px;position: relative;top: 70px;left: 110.5px; background-image: url("../image/avatar2.jpg");}
+.user{position: relative;top: 80px;left: 50px;font-size: 12px;text-align:center}
+.user span{position: relative;bottom: 20px;}
 

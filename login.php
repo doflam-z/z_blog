@@ -6,13 +6,6 @@ session_start();
 if(isset($_POST["sub"])){
     $display=new MainDisplay();
     $pdo=$display->mysqlCont();
-/*    try {
-        $pdo = new PDO("mysql:host=localhost;dbname=z_blog", "root", "root");
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);   //设置PDO显示异常
-    } catch (PDOException $e) {
-        echo '数据库连接失败' . $e->getMessage();
-    }*/
-
 	$sql="select user_name,user_id from user where user_name='{$_POST["user_name"]}' and user_passwd='".md5($_POST["user_passwd"])."'";
 	//验证账户密码
 	$result=$pdo->query($sql);
@@ -23,7 +16,7 @@ if(isset($_POST["sub"])){
         $_SESSION['user_id']=$user_id;
         $_SESSION['isLogin']=1;
 
-		header("Location:/index.php");
+		header("Location:/admin/index.php");
 	}elseif($result->rowCount() == 0){
 	    echo "账号或密码错误";
     }elseif($result->rowCount() > 0 and $_SESSION['code']!==$_POST['code']){

@@ -93,10 +93,20 @@ if (isset($_POST["cate_add"])) {
     $a->newcate();
 }*/
 
-try {
+/*try {
     $pdo = new PDO("mysql:host=localhost;dbname=phptest1", "root", "root");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);   //设置PDO显示异常
     echo $num=$pdo->exec("insert into t1(bookname1) value ('asd')");
 } catch (PDOException $e) {
     echo '数据库连接失败' . $e->getMessage();
-}
+}*/
+$id="submit2";
+echo "<pre>";
+print_r($_POST);
+echo "</pre>";
+if (isset($_POST["submit2"])){echo "###############";}
+?>
+<form action="" method="post">
+    <input type="text" name="in">
+    <input type="submit" value="提交" name="submit <?php echo $id?>">
+</form>
