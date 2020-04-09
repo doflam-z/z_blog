@@ -1,6 +1,6 @@
 <?php 
 //登录页
-include "class/maindisplay.class.php";
+include "../class/maindisplay.class.php";
 session_start();
 //连接数据库判断是否连接成功
 if(isset($_POST["sub"])){
@@ -15,8 +15,9 @@ if(isset($_POST["sub"])){
         $_SESSION['user_name']=$_POST['user_name'];
         $_SESSION['user_id']=$user_id;
         $_SESSION['isLogin']=1;
-
-		header("Location:/admin/index.php");
+        if($_SESSION["user_name"]=="admin"){
+		header("Location:../admin/index.php");
+        }else{header("Location:../home/index.php");}
 	}elseif($result->rowCount() == 0){
 	    echo "账号或密码错误";
     }elseif($result->rowCount() > 0 and $_SESSION['code']!==$_POST['code']){

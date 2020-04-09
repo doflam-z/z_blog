@@ -1,12 +1,17 @@
 <?php
 //后台入口
 include "../models/cont.init.php";
-include "../class/page.class.php";
+/*include "../class/page.class.php";
 include "../class/maindisplay.class.php";
 include "../class/articleaccess.class.php";
+include "../class/usersection.class.php";*/
+function __autoload($className){
+    include "../class/".strtolower($className).".class.php";
+}
 
 $access=new ArticleAccess();
 $display=new MainDisplay();
+$usersection=new UserSection();
 switch ($_GET["menu"]){
     case "article":$main_display=$display->article_manage();$position=1;
         break;
@@ -44,7 +49,7 @@ switch ($position){
 </head>
 <body>
 <div class="main">
-    <div class="main-top"><span>&nbsp;&nbsp;<a href="/markdown.php">写文章&nbsp;<img src="../public/image/钢笔.jpg" style="position: relative;top: 4px;"></a></span></div>
+    <div class="main-top"><span>&nbsp;&nbsp;<a href="/models/markdown.php">写文章&nbsp;<img src="../public/image/钢笔.jpg" style="position: relative;top: 4px;"></a></span></div>
     <div class="main-left">
         <div class="logo"><h3>Z_BLOG</h3></div>
         <ul class="main-left-nav">
@@ -65,9 +70,9 @@ switch ($position){
         <div class="avatar"></div>
         <div class="user">
             <table width="260">
-                <caption style="margin-bottom: 20px;">当前用户： admin</caption>
+                <caption style="margin-bottom: 20px;">当前用户： <b style="color: #51a351;"><?php echo $_SESSION["user_name"]?></b>&nbsp;&nbsp;<a href="../models/destroysession.php" style="color: #e9322d">注销</a></caption>
                 <tr><td>文章总数</td><td>评论总数</td><td>文章访问量</td></tr>
-                <tr><td>8</td><td>67</td><td>331</td></tr>
+                <tr><td><?php echo $usersection->article_count()?></td><td><?php echo $usersection->comment_count()?></td><td><?php echo $usersection->article_read()?></td></tr>
             </table>
         </div>
     </div>

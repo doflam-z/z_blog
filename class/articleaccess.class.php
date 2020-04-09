@@ -36,29 +36,29 @@ class ArticleAccess{
         }
     }
     //修改文章方法
-/*    function articleEdit(){
-        if (isset($_POST["publish_edit"])){
+    function articleEdit($id){
+        if (isset($_POST["edit"])){
             $tablename="article";
-        }else{
+        }/*else{
             $tablename="draft";
-        }
+        }*/
         $pdo=$this->mysqlCont();
         $time=time();
         $article_content=$_POST["mark"];
         $article_content=$this->articleChang($article_content);
-//        $query="insert into $tablename (article_title,article_content,cate_name,article_time) value('{$_POST["article_title"]}','$article_content','{$_POST["category"]}','$time')";
-        $query="update $tablename (article_title,article_content,cate_name,article_time) value('{$_POST["article_title"]}','$article_content','{$_POST["category"]}','$time') where id='{$_POST["article_id"]}'";
+//        $query="update $tablename(article_title,article_content,cate_name,article_time) value('{$_POST["article_title"]}','$article_content','{$_POST["category"]}','$time') where id='$id'";
+        $query="update $tablename set article_title='{$_POST["article_title"]}',article_content='$article_content',cate_name='{$_POST["category"]}',article_time='$time' where id='$id'";
         try {
             $result=$pdo->exec($query);
         } catch (PDOException $e) {
             echo "SQL语句执行错误:{$e->getMessage()}</br>";
         }
         if($result>0){
-            echo "执行成功";
+            echo "<div style='margin:200px auto;width: 500px;height:300px;color: #e9322d;text-align: center;'>修改成功！</br></br><a href='../admin/index.php' style='text-decoration: none;color: #00a8c6;font-size: 18px'>返回文章管理</a></div>";
         }else{
             echo "执行失败";
         }
-    }*/
+    }
 
     //查看文章方法
     function articleDisplay(){
@@ -72,8 +72,11 @@ class ArticleAccess{
         $str=$result[0]["article_content"];
         $title=$result[0]["article_title"];
         $html = $parser->makeHtml($str);
+        $comment_content=$this->read_comment($article_id);
         $result='';
         $result.= "<div class='markdown-body editormd-preview-container'><h2>$title</h2><?php echo $html?></div>";
+        $result.= "<div class='comment'>$comment_content</div>";
+        $result.= "<div class='comment'><form action='' method='post'><textarea name='comment_content'></textarea><button class='button' type='submit' name='sbubmit_comment' value='$article_id'>发表评论</button></form></div>";
         return $result;
     }
     //读取markdown源码
@@ -110,56 +113,47 @@ class ArticleAccess{
         $pdo=$this->mysqlCont();
         $pdo->exec($sql);
     }
-/*    //html文件转化方法
-    function htmlChang($str)
-    {
-        $patterns=array();
-        $patterns[0]='/\,/';
-        $patterns[1]='/\;/';
-        $patterns[2]='/\$/';
-        $patterns[3]='/\(/';
-        $patterns[4]='/\)/';
-        $patterns[5]='/\`/';
-        $keywords=array();
-        $keywords[0]='@《@';
-        $keywords[1]='@|@';
-        $keywords[2]='@4@';
-        $keywords[3]='@9@';
-        $keywords[4]='@0@';
-        $keywords[5]='@-@';
-        return $str=preg_replace($patterns,$keywords,$str);
-    }
 
-//恢复html方法
-    function htmlRegain($str)
-    {
-        $patterns=array();
-        $patterns[0]='/(@《@)/';
-        $patterns[1]='/(@\|@)/';
-        $patterns[2]='/(@4@)/';
-        $patterns[3]='/(@9@)/';
-        $patterns[4]='/(@0@)/';
-        $patterns[5]='/(@\-@)/';
-        $keywords=array();
-        $keywords[0]=',';
-        $keywords[1]=';';
-        $keywords[2]='$';
-        $keywords[3]='(';
-        $keywords[4]=')';
-        $keywords[5]='`';
-        return $str=preg_replace($patterns,$keywords,$str);
-    }*/
-
-/*    function test(){
+    //保存评论方法
+    function comment(){
+        $tablename="comment";
         $pdo=$this->mysqlCont();
-        $sql="insert into tw (bookname) value('asdasd')";
+        $time=time();
+        $comment_content=$_POST["comment_content"];
+        $comment_content=$this->articleChang($comment_content);
+        $query="insert into $tablename (comment_content,comment_time,username,article_id) value('$comment_content','$time','{$_SESSION["user_name"]}','{$_POST["sbubmit_comment"]}')";
         try {
-            $result=$pdo->exec($sql);
-            echo $result;
-        }catch (PDOException $e){
-            echo "错误".$e;
+            $result=$pdo->exec($query);
+        } catch (PDOException $e) {
+            echo "SQL语句执行错误:{$e->getMessage()}</br>";
         }
-    }*/
+        if($result>0){
+            header("Location:");
+        }else{
+            echo "执行失败";
+        }
+    }
+    //显示最新评论方法
+    function read_comment($article_id){
+        $tablename="comment";
+        $pdo=$this->mysqlCont();
+        $sql="select * from $tablename where article_id='$article_id'";
+        try {
+            $result=$pdo->query($sql);
+        } catch (PDOException $e) {
+            echo "SQL语句执行错误:{$e->getMessage()}</br>";
+        }
+        $main_display='';
+        $main_display.= "<div class='comment_content'><h3>最新评论</h3></div>";
+        foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $value) {
+            $comment=$value["comment_content"];
+            $user_name=$value["username"];
+            $time=date('Y年m月d日 H:i:s',$value["comment_time"]);
+            $main_display.= "<div class='comment_content'><h3><b style='font-size: 20px;color: #7ab5d3'>$user_name</b> : <span style='color: #6E6E68'>$comment</span></h3></div><div class='span'
+<span class='time'>$time</span></div></br>";
+        }
+        return $main_display;
+    }
 }
 /*$a=new ArticleAccess();
 $str="a'b'c'd'";

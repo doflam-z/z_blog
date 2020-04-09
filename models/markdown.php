@@ -1,24 +1,35 @@
 <?php
-include "class/articleaccess.class.php";
+function __autoload($className){
+    include "../class/".strtolower($className).".class.php";
+}
 $access=new ArticleAccess();
-    if (isset($_POST["save"]) or isset($_POST["publish"])){
-        $access->articleSave();
-        exit;
-    }
-
     if (isset($_GET["article_id"])){
         $id=$_GET["article_id"];
         $teblename=$_GET["tablename"];
         $result=$access->take($id,$teblename);
         $title= $result["title"];
         $content=$result["content"];
+        $sub="edit";
+        $subname="修改文章";
+    }else{
+        $sub="publish";
+        $subname="发布文章";
     }
+
+    if (isset($_POST["save"]) or isset($_POST["publish"])){
+        $access->articleSave();
+        exit;
+    }elseif(isset($_POST["edit"])){
+        $access->articleEdit($id);
+        exit;
+    }
+
 ?>
 <!DOCTYPE html>
 <html>
 <header>
     <title>写文章</title>
-    <link rel="stylesheet" href="editormd/css/editormd.css" />
+    <link rel="stylesheet" href="../editormd/css/editormd.css" />
     <style type="text/css">
         body{
             margin: 0px;
@@ -67,9 +78,9 @@ $access=new ArticleAccess();
 <body>
 <form action="" method="POST">
     <div id="nav" style="height: 40px">
-        <span style="line-height: 40px;position: relative;left: 20px;color: #57555f;"><a  href="admin/index.php">返回管理</a>&nbsp;&nbsp;&nbsp;标题=>
+        <span style="line-height: 40px;position: relative;left: 20px;color: #57555f;"><a  href="/admin/index.php">返回管理</a>&nbsp;&nbsp;&nbsp;标题=>
             <input style="width:1500px;height:30px;border-radius: 6px;font-size: 18px;" type="text" name="article_title" value="<?php echo $title?>">
-            <button class="button button1" type="submit" name="publish">发布文章</button>
+            <button class="button button1" type="submit" name="<?php echo $sub?>"><?php echo $subname?></button>
             <button class="button button2" type="submit" name="save">保存</button>
             <select name="category" style="color: #0e0e0e;padding: 2px 4px;border-radius: 6px">
                 <?php echo $access->category();?>
@@ -82,13 +93,13 @@ $access=new ArticleAccess();
     </div>
 </form>
     <script src="https://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
-    <script src="editormd/editormd.min.js"></script>
+    <script src="../editormd/editormd.min.js"></script>
     <script type="text/javascript">
         $(function() {
             var editor = editormd("test-editor", {
                 width  : "100%",
                 height : "840",
-                path   : "editormd/lib/",
+                path   : "../editormd/lib/",
                 saveHTMLToTextarea : true  //该选项必须开启才能获取到html语言
             });
         });

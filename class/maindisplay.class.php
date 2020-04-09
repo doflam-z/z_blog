@@ -26,43 +26,60 @@ class MainDisplay
     //显示搜索的内容方法
     function search()
     {
-        $str=$_GET["search_str"];
-        $sql="select article_title from article where article_title like '%$str%'";
+        $tablename="article";
+        $str=trim($_GET["search_content"]);
+        $sql="select * from article where article_title like '%$str%'";
         $pdo=$this->mysqlCont();
         $rows=$pdo->query($sql)->fetchAll();
         //-------使用分页类部分
         $total = count($rows);
         $page = new Page($total, $listRows = 6, $query = "", $ord = true);
         $sql = $sql.' '.$page->limit;
-        $result = $pdo->query($sql);
-
-        $result_str=$result->fetch();
-        if ( $result_str) {
-        echo '<div class="box_content"><h3 class="font01">包含关键字['.$str.']的搜索结果如下</h3></div></br>';
-        foreach ($result as $value) {
-        echo '<div class="box_content"><h3 class="font01">' . $value["article_title"] . '</h3></div></br>';
+        $rows = $pdo->query($sql);
+        $rows_str=$rows->fetch();
+        $result="";
+        if ( $rows_str) {
+            $result.= "<div class='main-content-nav'><ul class='content-nav'><li style='border-bottom: 2px solid #2f96b4 '><a style='color: #0e0e0e' href='?menu=article'><b>标题包含关键字[$str]的文章如下</b></a></li></ul></div>";
+        foreach ($rows as $value) {
+            $id=$value["id"];
+            $views=$value["article_views"];
+            $comment=$value["comment_num"];
+            $time=date('Y年m月d日 H:i:s',$value["article_time"]);
+            $result.= "<div class='box_content'><h3><a href='?menu=article_display&articleid=$id&tablename=$tablename'> {$value["article_title"]}</a></h3><div class='span'
+<span class='time'>$time</span> <span class='read'>&nbsp;&nbsp;&nbsp;<img src='../public/image/图标/1158849.png'>&nbsp;$views</span>&nbsp;&nbsp;<span class='comment'><img src='../public/image/图标/1222902.png'>&nbsp;$comment</span></div><div class='manage_button'></div></div></br>";
         }
-        echo '<div class="box_content_list" style="height: 50px">' .$page->fpage(5,6). '</div>';
+            $result.= '<div class="box_content_list" style="height: 50px">' .$page->fpage(5,6). '</div>';
         }else{
-        echo '<div class="box_content"><h3 class="font01">关键字['.$str.']无搜索结果</h3></div></br>';
+            $result.= '<div class="box_content"><h3 class="font01">关键字['.$str.']无搜索结果</h3></div></br>';
         }
+        return $result;
     }
 
-    //显示默认分页的内容方法
+    //显示默认全部文章分页的内容方法
     function fpage()
     {
-        $sql="select * from article";
+        $tablename="article";
+        $sql="select * from $tablename";
         $pdo=$this->mysqlCont();
         $rows=$pdo->query($sql)->fetchAll();
         //-------使用分页类部分
         $total = count($rows);
+        $usersection=new UserSection();
         $page = new Page($total, $listRows = 6, $query = "", $ord = true);
         $sql = $sql.' '.$page->limit;
         $result = $pdo->query($sql);
+        $main_display=null;
+        $main_display.= "<div class='main-content-nav'><ul class='content-nav'><li style='border-bottom: 2px solid #2f96b4 '><a style='color: #0e0e0e' href='?menu=article'><b>全部文章</b></a></li></ul></div>";
         foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $value) {
-            echo '<div class="box_content"><h3 class="font01">' . $value["article_title"] . '</h3></div></br>';
+            $id=$value["id"];
+            $views=$value["article_views"];
+            $comment=$usersection->comment_num($id);
+            $time=date('Y年m月d日 H:i:s',$value["article_time"]);
+            $main_display.= "<div class='box_content'><h3><a href='?menu=article_display&articleid=$id&tablename=$tablename'> {$value["article_title"]}</a></h3><div class='span'
+<span class='time'>$time</span> <span class='read'>&nbsp;&nbsp;&nbsp;<img src='../public/image/图标/1158849.png'>&nbsp;$views</span>&nbsp;&nbsp;<span class='comment'><img src='../public/image/图标/1222902.png'>&nbsp;$comment</span></div><div class='manage_button'></div></div></br>";
         }
-        echo '<div class="box_content_list" style="height: 50px">' .$page->fpage(5,6). '</div>';
+        $main_display.= '<div class="box_content_list" style="height: 30px">' .$page->fpage(5,6). '</div>';
+        return $main_display;
     }
 
     //输出分类导航标签方法
@@ -77,6 +94,7 @@ class MainDisplay
     //显示分类的内容方法
     function category()
     {
+        $tablename="article";
         $cate_name=$_GET["nav"];
         $sql="select * from article where cate_name='".$cate_name."'";
         $pdo=$this->mysqlCont();
@@ -85,13 +103,35 @@ class MainDisplay
         $total = count($rows);
         $page = new Page($total, $listRows = 6, $query = "", $ord = true);
         $sql = $sql.' '.$page->limit;
-        $result = $pdo->query($sql);
-
-        echo '<div class="box_content"><h3 class="font01">【' . $cate_name . '】分类的文章如下</h3></div></br>';
-        foreach ($result as $value) {
-            echo '<div class="box_content"><h3 class="font01">' . $value["article_title"] . '</h3></div></br>';
+        $rows = $pdo->query($sql);
+        $result="";
+        $result.= "<div class='main-content-nav'><ul class='content-nav'><li style='border-bottom: 2px solid #2f96b4 '><a style='color: #0e0e0e' href='?menu=article'><b>【 $cate_name 】分类的文章如下</b></a></li></ul></div>";
+        foreach ($rows->fetchAll(PDO::FETCH_ASSOC) as $value) {
+            $id=$value["id"];
+            $views=$value["article_views"];
+            $comment=$value["comment_num"];
+            $time=date('Y年m月d日 H:i:s',$value["article_time"]);
+            $result.= "<div class='box_content'><h3><a href='?menu=article_display&articleid=$id&tablename=$tablename'> {$value["article_title"]}</a></h3><div class='span'
+<span class='time'>$time</span> <span class='read'>&nbsp;&nbsp;&nbsp;<img src='../public/image/图标/1158849.png'>&nbsp;$views</span>&nbsp;&nbsp;<span class='comment'><img src='../public/image/图标/1222902.png'>&nbsp;$comment</span></div><div class='manage_button'></div></div></br>";
         }
-        echo '<div class="box_content_list" style="height: 50px">' .$page->fpage(5,6). '</div>';
+        $result.= '<div class="box_content_list" style="height: 30px">' .$page->fpage(5,6). '</div>';
+        return $result;
+    }
+    //显示全部评论的方法
+    function comment(){
+        $pdo=$this->mysqlCont();
+        $sql = "select * from comment";
+        $rows=$pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        $result="";
+        $result.= "<div class='main-content-nav'><ul class='content-nav'><li style='border-bottom: 2px solid #2f96b4 '><a style='color: #0e0e0e'><b>全部评论</b></a></li></ul></div>";
+        foreach ($rows as $value) {
+            $comment=$value["comment_content"];
+            $user_name=$value["username"];
+            $time=date('Y年m月d日 H:i:s',$value["comment_time"]);
+            $result.= "<div class='comment_content'><h3><b style='font-size: 26px;color: #7ab5d3'>$user_name</b> : <span style='color: #6E6E68'>$comment</span></h3></div><div class='span'
+<span class='time'>$time</span></div></br>";
+        }
+        return $result;
     }
 
     //显示后台文章管理的方法
@@ -113,7 +153,7 @@ class MainDisplay
             $views=$value["article_views"];
             $comment=$value["comment_num"];
             $time=date('Y年m月d日 H:i:s',$value["article_time"]);
-            $main_display.= "<div class='box_content'><h3><a href='/markdown.php?article_id=$id&tablename=$tablename'> {$value["article_title"]}</a></h3><div class='span'
+            $main_display.= "<div class='box_content'><h3><a href='/models/markdown.php?article_id=$id&tablename=$tablename'> {$value["article_title"]}</a></h3><div class='span'
 <span class='time'>$time</span> <span class='read'>&nbsp;&nbsp;&nbsp;<img src='../public/image/图标/1158849.png'>&nbsp;$views</span>&nbsp;&nbsp;<span class='comment'><img src='../public/image/图标/1222902.png'>&nbsp;$comment</span></div><div class='manage_button'><a href='?menu=article_display&articleid=$id&tablename=$tablename'>查看</a> | <a href='?num={$page->pageNum()}&de_id=$id&de_tablename=$tablename' style='color: #e9322d'>删除</a></div></div></br>";
         }
         $main_display.= '<div class="box_content_list" style="height: 30px">' .$page->fpage(5,6). '</div>';
